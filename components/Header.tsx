@@ -34,12 +34,15 @@ const PAGE_TITLES: Record<string, string> = {
 
 export function Header({ session }: HeaderProps) {
   const pathname = usePathname();
-  const { isOpen } = useSidebar();
+  const { isOpen, width } = useSidebar();
   const pageTitle = PAGE_TITLES[pathname] || "RBAC Demo";
 
   return (
     <header
-      className={`bg-white shadow-sm border-b fixed top-0 right-0 left-0 ${session ? (isOpen ? "md:left-64" : "md:left-16") : ""} z-10 transition-all duration-300`}
+      className="bg-white shadow-sm border-b fixed top-0 right-0 z-10 transition-all duration-300"
+      style={{
+        left: session ? (isOpen ? `${width}px` : "4rem") : "0",
+      }}
     >
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">

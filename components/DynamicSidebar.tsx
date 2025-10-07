@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import type { Session } from "next-auth";
 import { useSidebar } from "./SidebarToggle";
@@ -29,53 +29,18 @@ export function DynamicSidebar({
   menuGroups,
   language = "en",
 }: DynamicSidebarProps) {
-  const { isOpen, toggle, width, setWidth } = useSidebar();
+  const { isOpen, toggle, width } = useSidebar();
   const [isBottomMenuExpanded, setIsBottomMenuExpanded] = useState(true);
-  const [isResizing, setIsResizing] = useState(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // 翻訳関数
   const t = (en: string, ja: string) => {
     return language === "ja" ? ja : en;
   };
 
-  // リサイズハンドラー
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!isOpen) return;
-    setIsResizing(true);
-    e.preventDefault();
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isResizing) return;
-    const newWidth = e.clientX;
-    setWidth(newWidth);
-  };
-
-  const handleMouseUp = () => {
-    setIsResizing(false);
-  };
-
-  // グローバルマウスイベントの設定
-  useEffect(() => {
-    if (isResizing) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-    } else {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    }
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isResizing]);
-
   return (
     <aside
-      ref={sidebarRef}
+      className="bg-white shadow-lg h-screen fixed left-0 top-0 transition-all duration-300 flex flex-col"
       style={{ width: isOpen ? `${width}px` : "4rem" }}
-      className="bg-white shadow-lg h-screen fixed left-0 top-0 flex flex-col transition-all duration-300 relative"
     >
       {/* Header with Toggle Button and App Name */}
       <div className="p-4 flex-shrink-0">
@@ -273,17 +238,6 @@ export function DynamicSidebar({
         {/* Sign Out Button */}
         <SignOutButton collapsed={!isOpen} />
       </div>
-
-      {/* Resize Handle */}
-      {isOpen && (
-        <div
-          onMouseDown={handleMouseDown}
-          className="absolute top-0 right-0 w-1 h-full cursor-ew-resize hover:bg-blue-500 transition-colors group"
-          style={{ touchAction: "none" }}
-        >
-          <div className="absolute top-1/2 right-0 transform -translate-y-1/2 w-1 h-16 bg-gray-300 group-hover:bg-blue-500 transition-colors" />
-        </div>
-      )}
     </aside>
   );
 }

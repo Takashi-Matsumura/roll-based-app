@@ -9,9 +9,9 @@ interface SidebarStore {
   setWidth: (width: number) => void;
 }
 
+const DEFAULT_WIDTH = 256; // 16rem = 256px (w-64)
 const MIN_WIDTH = 200;
 const MAX_WIDTH = 500;
-const DEFAULT_WIDTH = 256; // 16rem (w-64)
 
 export const useSidebar = create<SidebarStore>((set) => ({
   isOpen: true,
