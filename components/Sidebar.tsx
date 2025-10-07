@@ -13,7 +13,11 @@ interface SidebarProps {
   language?: string;
 }
 
-export function Sidebar({ session, userPermissions = [], language = "en" }: SidebarProps) {
+export function Sidebar({
+  session,
+  userPermissions = [],
+  language = "en",
+}: SidebarProps) {
   const { isOpen, toggle } = useSidebar();
 
   // Translation function
@@ -384,7 +388,8 @@ export function Sidebar({ session, userPermissions = [], language = "en" }: Side
           />
 
           {/* Manager Menu Group */}
-          {(session.user.role === "MANAGER" || session.user.role === "ADMIN") && (
+          {(session.user.role === "MANAGER" ||
+            session.user.role === "ADMIN") && (
             <MenuGroup
               title={t("manager")}
               items={managerMenuItems}
@@ -395,7 +400,8 @@ export function Sidebar({ session, userPermissions = [], language = "en" }: Side
           )}
 
           {/* Back Office Menu Group */}
-          {(session.user.role === "BACKOFFICE" || session.user.role === "ADMIN") && (
+          {(session.user.role === "BACKOFFICE" ||
+            session.user.role === "ADMIN") && (
             <MenuGroup
               title={t("backOffice")}
               items={backofficeMenuItems}

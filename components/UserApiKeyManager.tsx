@@ -67,7 +67,9 @@ export function UserApiKeyManager({
 
   const handleRemove = async (id: string) => {
     if (
-      !confirm("Are you sure you want to remove this API key? You will lose the associated permissions.")
+      !confirm(
+        "Are you sure you want to remove this API key? You will lose the associated permissions.",
+      )
     ) {
       return;
     }

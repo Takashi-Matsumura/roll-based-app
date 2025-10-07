@@ -4,20 +4,46 @@ import { auth } from "@/auth";
 export default async function BusinessTripPage() {
   const session = await auth();
 
-  if (!session || (session.user.role !== "BACKOFFICE" && session.user.role !== "ADMIN")) {
+  if (
+    !session ||
+    (session.user.role !== "BACKOFFICE" && session.user.role !== "ADMIN")
+  ) {
     redirect("/dashboard");
   }
 
   const mockTrips = [
-    { id: 1, employee: "John Smith", destination: "Tokyo", startDate: "2025-02-15", endDate: "2025-02-18", status: "Pending" },
-    { id: 2, employee: "Sarah Johnson", destination: "New York", startDate: "2025-02-20", endDate: "2025-02-23", status: "Approved" },
-    { id: 3, employee: "Michael Chen", destination: "London", startDate: "2025-03-01", endDate: "2025-03-05", status: "Pending" },
+    {
+      id: 1,
+      employee: "John Smith",
+      destination: "Tokyo",
+      startDate: "2025-02-15",
+      endDate: "2025-02-18",
+      status: "Pending",
+    },
+    {
+      id: 2,
+      employee: "Sarah Johnson",
+      destination: "New York",
+      startDate: "2025-02-20",
+      endDate: "2025-02-23",
+      status: "Approved",
+    },
+    {
+      id: 3,
+      employee: "Michael Chen",
+      destination: "London",
+      startDate: "2025-03-01",
+      endDate: "2025-03-05",
+      status: "Pending",
+    },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Business Trip Request</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Business Trip Request
+        </h1>
         <p className="text-gray-600 mt-2">
           Manage and approve employee business trip requests
         </p>
@@ -28,8 +54,19 @@ export default async function BusinessTripPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-blue-100 rounded-lg">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-6 h-6 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
@@ -42,8 +79,19 @@ export default async function BusinessTripPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-yellow-100 rounded-lg">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-6 h-6 text-yellow-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
@@ -56,8 +104,19 @@ export default async function BusinessTripPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-green-100 rounded-lg">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-6 h-6 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
@@ -107,10 +166,14 @@ export default async function BusinessTripPage() {
               {mockTrips.map((trip) => (
                 <tr key={trip.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{trip.employee}</div>
+                    <div className="font-medium text-gray-900">
+                      {trip.employee}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-600">{trip.destination}</span>
+                    <span className="text-sm text-gray-600">
+                      {trip.destination}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="text-sm text-gray-600">
@@ -161,13 +224,26 @@ export default async function BusinessTripPage() {
       {/* Mock Data Notice */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <svg className="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-5 h-5 text-yellow-600 mt-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <div>
             <h3 className="font-semibold text-yellow-900">Mock Data</h3>
             <p className="text-sm text-yellow-800 mt-1">
-              This page displays sample data for demonstration purposes. In a production environment, this would connect to real travel management systems.
+              This page displays sample data for demonstration purposes. In a
+              production environment, this would connect to real travel
+              management systems.
             </p>
           </div>
         </div>

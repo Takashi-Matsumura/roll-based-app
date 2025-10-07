@@ -15,7 +15,10 @@ interface LanguageSwitcherProps {
   };
 }
 
-export function LanguageSwitcher({ currentLanguage, translations }: LanguageSwitcherProps) {
+export function LanguageSwitcher({
+  currentLanguage,
+  translations,
+}: LanguageSwitcherProps) {
   const [language, setLanguage] = useState(currentLanguage);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -59,7 +62,8 @@ export function LanguageSwitcher({ currentLanguage, translations }: LanguageSwit
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">
-            {translations.current}: <strong>{language === "en" ? "English" : "日本語"}</strong>
+            {translations.current}:{" "}
+            <strong>{language === "en" ? "English" : "日本語"}</strong>
           </label>
 
           <div className="space-y-2">
@@ -103,7 +107,9 @@ export function LanguageSwitcher({ currentLanguage, translations }: LanguageSwit
         </button>
 
         {message && (
-          <div className={`p-3 rounded-lg ${message.includes("Failed") ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}>
+          <div
+            className={`p-3 rounded-lg ${message.includes("Failed") ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}
+          >
             {message}
           </div>
         )}

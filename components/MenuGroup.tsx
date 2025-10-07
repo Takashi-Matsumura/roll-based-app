@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface MenuItem {
+  id?: string;
   href: string;
   label: string;
   icon: React.ReactNode;
@@ -30,7 +31,7 @@ export function MenuGroup({
       <>
         {items.map((item) => (
           <Link
-            key={item.href}
+            key={item.id || item.href}
             href={item.href}
             className={`flex items-center gap-3 py-3 ${color} hover:bg-gray-100 rounded-lg transition px-2 justify-center`}
             title={item.label}
@@ -59,6 +60,7 @@ export function MenuGroup({
           aria-hidden="true"
         >
           <path
+            key="chevron-down"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
@@ -72,7 +74,7 @@ export function MenuGroup({
         <div className="space-y-1">
           {items.map((item) => (
             <Link
-              key={item.href}
+              key={item.id || item.href}
               href={item.href}
               className={`flex items-center gap-3 py-3 ${color} hover:bg-gray-100 rounded-lg transition px-4`}
             >

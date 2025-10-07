@@ -23,6 +23,7 @@ export function SignOutButton({ collapsed = false }: SignOutButtonProps) {
         aria-hidden="true"
       >
         <path
+          key="signout-icon"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}

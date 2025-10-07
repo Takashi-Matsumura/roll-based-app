@@ -33,7 +33,8 @@ export default async function UserApiKeysPage() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">API Keys</h1>
         <p className="text-gray-600 mt-2">
-          Register API keys provided by administrators to access additional features
+          Register API keys provided by administrators to access additional
+          features
         </p>
       </div>
 
