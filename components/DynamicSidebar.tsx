@@ -89,7 +89,6 @@ export function DynamicSidebar({
                 key={group.id}
                 title={language === "ja" ? group.nameJa : group.name}
                 items={menuItems}
-                isOpen={isOpen}
                 color={group.color}
                 isSidebarCollapsed={!isOpen}
               />

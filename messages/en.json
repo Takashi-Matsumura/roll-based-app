@@ -5,7 +5,7 @@
     "dashboard": "Dashboard",
     "profile": "Profile",
     "settings": "Settings",
-    "apiKeys": "API Keys",
+    "accessKeys": "Access Keys",
     "businessIntelligence": "Business Intelligence",
     "hrEvaluation": "HR Evaluation",
     "businessTrip": "Business Trip Request",
@@ -15,7 +15,7 @@
     "advancedSettings": "Advanced Settings",
     "adminPanel": "Admin Panel",
     "userManagement": "User Management",
-    "apiKeyManagement": "API Key Management",
+    "accessKeyManagement": "Access Key Management",
     "logout": "Logout"
   },
   "menuGroups": {
@@ -31,7 +31,7 @@
     "dashboard": "Dashboard",
     "profile": "Profile",
     "settings": "Settings",
-    "apiKeys": "API Keys",
+    "accessKeys": "Access Keys",
     "businessIntelligence": "Business Intelligence",
     "hrEvaluation": "HR Evaluation",
     "businessTrip": "Business Trip Request",
@@ -41,7 +41,7 @@
     "advancedSettings": "Advanced Settings",
     "adminPanel": "Admin Panel",
     "userManagement": "User Management",
-    "apiKeyManagement": "API Key Management"
+    "accessKeyManagement": "Access Key Management"
   },
   "settings": {
     "title": "Settings",

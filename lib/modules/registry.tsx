@@ -101,18 +101,18 @@ export const moduleRegistry: Record<string, AppModule> = {
     ),
   },
 
-  apiKeys: {
-    id: "apiKeys",
-    name: "API Keys",
-    nameJa: "APIキー",
-    path: "/api-keys",
+  accessKeys: {
+    id: "accessKeys",
+    name: "Access Keys",
+    nameJa: "アクセスキー",
+    path: "/access-keys",
     menuGroup: "user",
     requiredRoles: ["USER", "MANAGER", "BACKOFFICE", "ADMIN"],
     order: 3,
     enabled: true,
     icon: (
       <svg
-        key="apiKeys-icon"
+        key="accessKeys-icon"
         className="w-5 h-5 flex-shrink-0"
         fill="none"
         stroke="currentColor"
@@ -381,18 +381,18 @@ export const moduleRegistry: Record<string, AppModule> = {
     ),
   },
 
-  apiKeyManagement: {
-    id: "apiKeyManagement",
-    name: "API Key Management",
-    nameJa: "APIキー管理",
-    path: "/admin/api-keys",
+  accessKeyManagement: {
+    id: "accessKeyManagement",
+    name: "Access Key Management",
+    nameJa: "アクセスキー管理",
+    path: "/admin/access-keys",
     menuGroup: "admin",
     requiredRoles: ["ADMIN"],
     order: 3,
     enabled: true,
     icon: (
       <svg
-        key="apiKeyManagement-icon"
+        key="accessKeyManagement-icon"
         className="w-5 h-5 flex-shrink-0"
         fill="none"
         stroke="currentColor"

@@ -1,29 +1,29 @@
 "use client";
 
-import type { ApiKey, ApiKeyPermission, Permission } from "@prisma/client";
+import type { AccessKey, AccessKeyPermission, Permission } from "@prisma/client";
 import { useState } from "react";
 
-type ApiKeyWithPermissions = ApiKey & {
-  permissions: (ApiKeyPermission & {
+type AccessKeyWithPermissions = AccessKey & {
+  permissions: (AccessKeyPermission & {
     permission: Permission;
   })[];
   _count: {
-    userApiKeys: number;
+    userAccessKeys: number;
   };
 };
 
-interface ApiKeyManagerProps {
-  apiKeys: ApiKeyWithPermissions[];
+interface AccessKeyManagerProps {
+  accessKeys: AccessKeyWithPermissions[];
   permissions: Permission[];
   adminId: string;
 }
 
-export function ApiKeyManager({
-  apiKeys: initialApiKeys,
+export function AccessKeyManager({
+  accessKeys: initialAccessKeys,
   permissions,
   adminId,
-}: ApiKeyManagerProps) {
-  const [apiKeys, setApiKeys] = useState(initialApiKeys);
+}: AccessKeyManagerProps) {
+  const [accessKeys, setAccessKeys] = useState(initialAccessKeys);
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -38,62 +38,62 @@ export function ApiKeyManager({
     }
 
     try {
-      const response = await fetch("/api/admin/api-keys", {
+      const response = await fetch("/api/admin/access-keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error("Failed to create API key");
+      if (!response.ok) throw new Error("Failed to create Access key");
 
-      const { apiKey } = await response.json();
-      setApiKeys([apiKey, ...apiKeys]);
+      const { accessKey } = await response.json();
+      setAccessKeys([accessKey, ...accessKeys]);
       setFormData({ name: "", expiresInDays: 365, permissionIds: [] });
       setIsCreating(false);
       alert(
-        `API key created successfully:\n\n${apiKey.key}\n\nPlease copy and save this key.`,
+        `Access key created successfully:\n\n${accessKey.key}\n\nPlease copy and save this key.`,
       );
     } catch (error) {
-      console.error("Error creating API key:", error);
-      alert("Failed to create API key");
+      console.error("Error creating Access key:", error);
+      alert("Failed to create Access key");
     }
   };
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
-      const response = await fetch("/api/admin/api-keys", {
+      const response = await fetch("/api/admin/access-keys", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, isActive: !currentStatus }),
       });
 
-      if (!response.ok) throw new Error("Failed to update API key");
+      if (!response.ok) throw new Error("Failed to update Access key");
 
-      setApiKeys(
-        apiKeys.map((key) =>
+      setAccessKeys(
+        accessKeys.map((key) =>
           key.id === id ? { ...key, isActive: !currentStatus } : key,
         ),
       );
     } catch (error) {
-      console.error("Error updating API key:", error);
-      alert("Failed to update API key");
+      console.error("Error updating Access key:", error);
+      alert("Failed to update Access key");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this API key?")) return;
+    if (!confirm("Are you sure you want to delete this Access key?")) return;
 
     try {
-      const response = await fetch(`/api/admin/api-keys?id=${id}`, {
+      const response = await fetch(`/api/admin/access-keys?id=${id}`, {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Failed to delete API key");
+      if (!response.ok) throw new Error("Failed to delete Access key");
 
-      setApiKeys(apiKeys.filter((key) => key.id !== id));
+      setAccessKeys(accessKeys.filter((key) => key.id !== id));
     } catch (error) {
-      console.error("Error deleting API key:", error);
-      alert("Failed to delete API key");
+      console.error("Error deleting Access key:", error);
+      alert("Failed to delete Access key");
     }
   };
 
@@ -203,13 +203,13 @@ export function ApiKeyManager({
         </div>
 
         <div className="divide-y">
-          {apiKeys.map((apiKey) => (
-            <div key={apiKey.id} className="p-6">
+          {accessKeys.map((accessKey) => (
+            <div key={accessKey.id} className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold">{apiKey.name}</h3>
-                    {apiKey.isActive ? (
+                    <h3 className="text-lg font-semibold">{accessKey.name}</h3>
+                    {accessKey.isActive ? (
                       <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded">
                         Active
                       </span>
@@ -220,7 +220,7 @@ export function ApiKeyManager({
                     )}
                   </div>
                   <div className="font-mono text-sm text-gray-600 bg-gray-50 p-2 rounded">
-                    {apiKey.key}
+                    {accessKey.key}
                   </div>
                 </div>
 
@@ -228,15 +228,15 @@ export function ApiKeyManager({
                   <button
                     type="button"
                     onClick={() =>
-                      handleToggleActive(apiKey.id, apiKey.isActive)
+                      handleToggleActive(accessKey.id, accessKey.isActive)
                     }
                     className="px-3 py-1 text-sm border rounded hover:bg-gray-50"
                   >
-                    {apiKey.isActive ? "Deactivate" : "Activate"}
+                    {accessKey.isActive ? "Deactivate" : "Activate"}
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleDelete(apiKey.id)}
+                    onClick={() => handleDelete(accessKey.id)}
                     className="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50"
                   >
                     Delete
@@ -247,17 +247,17 @@ export function ApiKeyManager({
               <div className="space-y-2">
                 <div className="text-sm text-gray-600">
                   Expires:{" "}
-                  {new Date(apiKey.expiresAt).toLocaleDateString("en-US")}
+                  {new Date(accessKey.expiresAt).toLocaleDateString("en-US")}
                 </div>
                 <div className="text-sm text-gray-600">
-                  Users: {apiKey._count.userApiKeys}
+                  Users: {accessKey._count.userAccessKeys}
                 </div>
                 <div>
                   <div className="text-sm font-medium text-gray-700 mb-1">
                     Permissions:
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {apiKey.permissions.map(({ permission }) => (
+                    {accessKey.permissions.map(({ permission }) => (
                       <span
                         key={permission.id}
                         className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"

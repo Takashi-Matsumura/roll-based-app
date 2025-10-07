@@ -5,7 +5,7 @@
     "dashboard": "ダッシュボード",
     "profile": "プロフィール",
     "settings": "設定",
-    "apiKeys": "APIキー",
+    "accessKeys": "アクセスキー",
     "businessIntelligence": "ビジネスインテリジェンス",
     "hrEvaluation": "人事評価",
     "businessTrip": "出張申請",
@@ -15,7 +15,7 @@
     "advancedSettings": "高度な設定",
     "adminPanel": "管理画面",
     "userManagement": "ユーザー管理",
-    "apiKeyManagement": "APIキー管理",
+    "accessKeyManagement": "アクセスキー管理",
     "logout": "ログアウト"
   },
   "menuGroups": {
@@ -31,7 +31,7 @@
     "dashboard": "ダッシュボード",
     "profile": "プロフィール",
     "settings": "設定",
-    "apiKeys": "APIキー",
+    "accessKeys": "アクセスキー",
     "businessIntelligence": "ビジネスインテリジェンス",
     "hrEvaluation": "人事評価",
     "businessTrip": "出張申請",
@@ -41,7 +41,7 @@
     "advancedSettings": "高度な設定",
     "adminPanel": "管理画面",
     "userManagement": "ユーザー管理",
-    "apiKeyManagement": "APIキー管理"
+    "accessKeyManagement": "アクセスキー管理"
   },
   "settings": {
     "title": "設定",

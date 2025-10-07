@@ -1,93 +1,93 @@
 "use client";
 
 import type {
-  ApiKey,
-  ApiKeyPermission,
+  AccessKey,
+  AccessKeyPermission,
   Permission,
-  UserApiKey,
+  UserAccessKey,
 } from "@prisma/client";
 import { useState } from "react";
 
-type UserApiKeyWithDetails = UserApiKey & {
-  apiKey: ApiKey & {
-    permissions: (ApiKeyPermission & {
+type UserAccessKeyWithDetails = UserAccessKey & {
+  accessKey: AccessKey & {
+    permissions: (AccessKeyPermission & {
       permission: Permission;
     })[];
   };
 };
 
-interface UserApiKeyManagerProps {
-  userApiKeys: UserApiKeyWithDetails[];
+interface UserAccessKeyManagerProps {
+  userAccessKeys: UserAccessKeyWithDetails[];
   userId: string;
 }
 
-export function UserApiKeyManager({
-  userApiKeys: initialUserApiKeys,
+export function UserAccessKeyManager({
+  userAccessKeys: initialUserAccessKeys,
   userId,
-}: UserApiKeyManagerProps) {
-  const [userApiKeys, setUserApiKeys] = useState(initialUserApiKeys);
+}: UserAccessKeyManagerProps) {
+  const [userAccessKeys, setUserAccessKeys] = useState(initialUserAccessKeys);
   const [isAdding, setIsAdding] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState("");
+  const [accessKeyInput, setAccessKeyInput] = useState("");
   const [error, setError] = useState("");
 
   const handleRegister = async () => {
-    if (!apiKeyInput.trim()) {
-      setError("Please enter an API key");
+    if (!accessKeyInput.trim()) {
+      setError("Please enter an Access key");
       return;
     }
 
     setError("");
 
     try {
-      const response = await fetch("/api/user/api-keys", {
+      const response = await fetch("/api/user/access-keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiKey: apiKeyInput.trim() }),
+        body: JSON.stringify({ accessKey: accessKeyInput.trim() }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Failed to register API key");
+        setError(data.error || "Failed to register Access key");
         return;
       }
 
-      setUserApiKeys([data.userApiKey, ...userApiKeys]);
-      setApiKeyInput("");
+      setUserAccessKeys([data.userAccessKey, ...userAccessKeys]);
+      setAccessKeyInput("");
       setIsAdding(false);
-      alert("API key registered successfully!");
+      alert("Access key registered successfully!");
 
       // Reload to update permissions
       window.location.reload();
     } catch (error) {
-      console.error("Error registering API key:", error);
-      setError("Failed to register API key");
+      console.error("Error registering Access key:", error);
+      setError("Failed to register Access key");
     }
   };
 
   const handleRemove = async (id: string) => {
     if (
       !confirm(
-        "Are you sure you want to remove this API key? You will lose the associated permissions.",
+        "Are you sure you want to remove this Access key? You will lose the associated permissions.",
       )
     ) {
       return;
     }
 
     try {
-      const response = await fetch(`/api/user/api-keys?id=${id}`, {
+      const response = await fetch(`/api/user/access-keys?id=${id}`, {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Failed to remove API key");
+      if (!response.ok) throw new Error("Failed to remove Access key");
 
-      setUserApiKeys(userApiKeys.filter((key) => key.id !== id));
+      setUserAccessKeys(userAccessKeys.filter((key) => key.id !== id));
 
       // Reload to update permissions
       window.location.reload();
     } catch (error) {
-      console.error("Error removing API key:", error);
-      alert("Failed to remove API key");
+      console.error("Error removing Access key:", error);
+      alert("Failed to remove Access key");
     }
   };
 
@@ -102,7 +102,7 @@ export function UserApiKeyManager({
             onClick={() => {
               setIsAdding(!isAdding);
               setError("");
-              setApiKeyInput("");
+              setAccessKeyInput("");
             }}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
@@ -118,8 +118,8 @@ export function UserApiKeyManager({
               </label>
               <input
                 type="text"
-                value={apiKeyInput}
-                onChange={(e) => setApiKeyInput(e.target.value)}
+                value={accessKeyInput}
+                onChange={(e) => setAccessKeyInput(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg font-mono"
                 placeholder="e.g., XXXX-XXXX-XXXX-XXXX"
               />
@@ -137,31 +137,31 @@ export function UserApiKeyManager({
         )}
       </div>
 
-      {/* Registered API Keys */}
+      {/* Registered Access Keys */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="px-6 py-4 border-b">
-          <h2 className="text-xl font-semibold">Registered API Keys</h2>
+          <h2 className="text-xl font-semibold">Registered Access Keys</h2>
         </div>
 
-        {userApiKeys.length === 0 ? (
+        {userAccessKeys.length === 0 ? (
           <div className="p-6 text-center text-gray-500">
-            No API keys registered
+            No Access keys registered
           </div>
         ) : (
           <div className="divide-y">
-            {userApiKeys.map((userApiKey) => {
+            {userAccessKeys.map((userAccessKey) => {
               const isExpired =
-                new Date(userApiKey.apiKey.expiresAt) < new Date();
+                new Date(userAccessKey.accessKey.expiresAt) < new Date();
 
               return (
-                <div key={userApiKey.id} className="p-6">
+                <div key={userAccessKey.id} className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold">
-                          {userApiKey.apiKey.name}
+                          {userAccessKey.accessKey.name}
                         </h3>
-                        {!userApiKey.apiKey.isActive ? (
+                        {!userAccessKey.accessKey.isActive ? (
                           <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded">
                             Inactive
                           </span>
@@ -176,13 +176,13 @@ export function UserApiKeyManager({
                         )}
                       </div>
                       <div className="font-mono text-sm text-gray-600 bg-gray-50 p-2 rounded mb-2">
-                        {userApiKey.apiKey.key}
+                        {userAccessKey.accessKey.key}
                       </div>
                     </div>
 
                     <button
                       type="button"
-                      onClick={() => handleRemove(userApiKey.id)}
+                      onClick={() => handleRemove(userAccessKey.id)}
                       className="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50"
                     >
                       Remove
@@ -192,13 +192,13 @@ export function UserApiKeyManager({
                   <div className="space-y-2">
                     <div className="text-sm text-gray-600">
                       Registered:{" "}
-                      {new Date(userApiKey.activatedAt).toLocaleDateString(
+                      {new Date(userAccessKey.activatedAt).toLocaleDateString(
                         "en-US",
                       )}
                     </div>
                     <div className="text-sm text-gray-600">
                       Expires:{" "}
-                      {new Date(userApiKey.apiKey.expiresAt).toLocaleDateString(
+                      {new Date(userAccessKey.accessKey.expiresAt).toLocaleDateString(
                         "en-US",
                       )}
                     </div>
@@ -207,7 +207,7 @@ export function UserApiKeyManager({
                         Granted Permissions:
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {userApiKey.apiKey.permissions.map(({ permission }) => (
+                        {userAccessKey.accessKey.permissions.map(({ permission }) => (
                           <span
                             key={permission.id}
                             className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
@@ -227,9 +227,9 @@ export function UserApiKeyManager({
 
       {/* Demo Keys Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-900 mb-2">Demo API Keys</h3>
+        <h3 className="font-semibold text-blue-900 mb-2">Demo Access Keys</h3>
         <p className="text-sm text-blue-800 mb-2">
-          You can test with the following demo API keys:
+          You can test with the following demo Access keys:
         </p>
         <ul className="text-sm text-blue-800 space-y-1">
           <li className="font-mono">

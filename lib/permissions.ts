@@ -9,18 +9,18 @@ const prisma = globalForPrisma.prisma ?? new PrismaClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 /**
- * Check if a user has a specific permission through registered API keys
+ * Check if a user has a specific permission through registered Access keys
  */
 export async function hasPermission(
   userId: string,
   permissionName: string,
 ): Promise<boolean> {
-  const userApiKeys = await prisma.userApiKey.findMany({
+  const userAccessKeys = await prisma.userAccessKey.findMany({
     where: {
       userId,
     },
     include: {
-      apiKey: {
+      accessKey: {
         include: {
           permissions: {
             include: {
@@ -32,19 +32,19 @@ export async function hasPermission(
     },
   });
 
-  // Check if any of the user's registered API keys grant the permission
-  for (const userApiKey of userApiKeys) {
-    const { apiKey } = userApiKey;
+  // Check if any of the user's registered Access keys grant the permission
+  for (const userAccessKey of userAccessKeys) {
+    const { accessKey } = userAccessKey;
 
-    // Skip if API key is not active
-    if (!apiKey.isActive) continue;
+    // Skip if Access key is not active
+    if (!accessKey.isActive) continue;
 
-    // Skip if API key has expired
-    if (new Date(apiKey.expiresAt) < new Date()) continue;
+    // Skip if Access key has expired
+    if (new Date(accessKey.expiresAt) < new Date()) continue;
 
-    // Check if this API key has the required permission
-    const hasRequiredPermission = apiKey.permissions.some(
-      (apiKeyPermission) => apiKeyPermission.permission.name === permissionName,
+    // Check if this Access key has the required permission
+    const hasRequiredPermission = accessKey.permissions.some(
+      (accessKeyPermission) => accessKeyPermission.permission.name === permissionName,
     );
 
     if (hasRequiredPermission) {
@@ -56,15 +56,15 @@ export async function hasPermission(
 }
 
 /**
- * Get all permissions a user has through registered API keys
+ * Get all permissions a user has through registered Access keys
  */
 export async function getUserPermissions(userId: string): Promise<string[]> {
-  const userApiKeys = await prisma.userApiKey.findMany({
+  const userAccessKeys = await prisma.userAccessKey.findMany({
     where: {
       userId,
     },
     include: {
-      apiKey: {
+      accessKey: {
         include: {
           permissions: {
             include: {
@@ -78,17 +78,17 @@ export async function getUserPermissions(userId: string): Promise<string[]> {
 
   const permissionSet = new Set<string>();
 
-  for (const userApiKey of userApiKeys) {
-    const { apiKey } = userApiKey;
+  for (const userAccessKey of userAccessKeys) {
+    const { accessKey } = userAccessKey;
 
-    // Skip if API key is not active or expired
-    if (!apiKey.isActive || new Date(apiKey.expiresAt) < new Date()) {
+    // Skip if Access key is not active or expired
+    if (!accessKey.isActive || new Date(accessKey.expiresAt) < new Date()) {
       continue;
     }
 
-    // Add all permissions from this API key
-    for (const apiKeyPermission of apiKey.permissions) {
-      permissionSet.add(apiKeyPermission.permission.name);
+    // Add all permissions from this Access key
+    for (const accessKeyPermission of accessKey.permissions) {
+      permissionSet.add(accessKeyPermission.permission.name);
     }
   }
 

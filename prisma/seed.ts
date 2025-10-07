@@ -92,8 +92,8 @@ async function main() {
     });
   }
 
-  // Create a demo API key
-  const demoApiKey = await prisma.apiKey.upsert({
+  // Create a demo Access key
+  const demoAccessKey = await prisma.accessKey.upsert({
     where: { key: "DEMO-KEY-REPORTS-2025" },
     update: {},
     create: {
@@ -112,7 +112,7 @@ async function main() {
     },
   });
 
-  const demoApiKey2 = await prisma.apiKey.upsert({
+  const demoAccessKey2 = await prisma.accessKey.upsert({
     where: { key: "DEMO-KEY-FULL-ACCESS-2025" },
     update: {},
     create: {
@@ -152,9 +152,9 @@ async function main() {
   console.log(`  - ${backoffice.email} (${backoffice.role})`);
   console.log("\nCreated permissions:");
   console.log(`  - ${permissions.length} permissions`);
-  console.log("\nCreated demo API keys:");
-  console.log(`  - ${demoApiKey.key} (${demoApiKey.name})`);
-  console.log(`  - ${demoApiKey2.key} (${demoApiKey2.name})`);
+  console.log("\nCreated demo Access keys:");
+  console.log(`  - ${demoAccessKey.key} (${demoAccessKey.name})`);
+  console.log(`  - ${demoAccessKey2.key} (${demoAccessKey2.name})`);
 }
 
 main()

@@ -55,7 +55,7 @@ model User {
   language      String        @default("en") // Language preference: "en" or "ja"
   accounts      Account[]
   sessions      Session[]
-  userApiKeys   UserApiKey[]
+  userAccessKeys UserAccessKey[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -70,50 +70,50 @@ model VerificationToken {
 
 // 権限（メニュー）の定義
 model Permission {
-  id                String              @id @default(cuid())
-  name              String              @unique // 例: "reports", "analytics", "advanced_settings"
-  displayName       String              // 表示名
-  description       String?             // 説明
-  menuPath          String              // メニューのパス 例: "/reports"
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  apiKeyPermissions ApiKeyPermission[]
+  id                    String                  @id @default(cuid())
+  name                  String                  @unique // 例: "reports", "analytics", "advanced_settings"
+  displayName           String                  // 表示名
+  description           String?                 // 説明
+  menuPath              String                  // メニューのパス 例: "/reports"
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  accessKeyPermissions  AccessKeyPermission[]
 }
 
-// APIキー
-model ApiKey {
-  id          String             @id @default(cuid())
-  key         String             @unique // APIキー本体（ランダム生成）
-  name        String             // キーの名前/説明
-  expiresAt   DateTime           // 有効期限
-  isActive    Boolean            @default(true) // 有効/無効
-  createdBy   String             // 作成者（AdminのユーザーID）
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  permissions ApiKeyPermission[]
-  userApiKeys UserApiKey[]
+// アクセスキー（イレギュラーなメニューアクセスの認可用）
+model AccessKey {
+  id              String                @id @default(cuid())
+  key             String                @unique // アクセスキー本体（ランダム生成）
+  name            String                // キーの名前/説明
+  expiresAt       DateTime              // 有効期限
+  isActive        Boolean               @default(true) // 有効/無効
+  createdBy       String                // 作成者（AdminのユーザーID）
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  permissions     AccessKeyPermission[]
+  userAccessKeys  UserAccessKey[]
 }
 
-// APIキーと権限の関連付け
-model ApiKeyPermission {
+// アクセスキーと権限の関連付け
+model AccessKeyPermission {
   id           String     @id @default(cuid())
-  apiKeyId     String
+  accessKeyId  String
   permissionId String
-  apiKey       ApiKey     @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  accessKey    AccessKey  @relation(fields: [accessKeyId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now())
 
-  @@unique([apiKeyId, permissionId])
+  @@unique([accessKeyId, permissionId])
 }
 
-// ユーザーが登録したAPIキー
-model UserApiKey {
-  id          String   @id @default(cuid())
+// ユーザーが登録したアクセスキー
+model UserAccessKey {
+  id          String    @id @default(cuid())
   userId      String
-  apiKeyId    String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKey      ApiKey   @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  activatedAt DateTime @default(now())
+  accessKeyId String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessKey   AccessKey @relation(fields: [accessKeyId], references: [id], onDelete: Cascade)
+  activatedAt DateTime  @default(now())
 
-  @@unique([userId, apiKeyId])
+  @@unique([userId, accessKeyId])
 }

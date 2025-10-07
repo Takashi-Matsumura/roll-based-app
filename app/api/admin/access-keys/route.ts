@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-// Generate random API key
-function generateApiKey(): string {
+// Generate random Access key
+function generateAccessKey(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const segments = 4;
   const segmentLength = 8;
@@ -18,7 +18,7 @@ function generateApiKey(): string {
   return key;
 }
 
-// Create new API key
+// Create new Access key
 export async function POST(request: Request) {
   const session = await auth();
 
@@ -42,12 +42,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const key = generateApiKey();
+    const key = generateAccessKey();
     const expiresAt = new Date(
       Date.now() + expiresInDays * 24 * 60 * 60 * 1000,
     );
 
-    const apiKey = await prisma.apiKey.create({
+    const accessKey = await prisma.accessKey.create({
       data: {
         key,
         name,
@@ -71,17 +71,17 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ apiKey });
+    return NextResponse.json({ accessKey });
   } catch (error) {
-    console.error("Error creating API key:", error);
+    console.error("Error creating Access key:", error);
     return NextResponse.json(
-      { error: "Failed to create API key" },
+      { error: "Failed to create Access key" },
       { status: 500 },
     );
   }
 }
 
-// Update API key (activate/deactivate)
+// Update Access key (activate/deactivate)
 export async function PATCH(request: Request) {
   const session = await auth();
 
@@ -100,22 +100,22 @@ export async function PATCH(request: Request) {
       );
     }
 
-    const apiKey = await prisma.apiKey.update({
+    const accessKey = await prisma.accessKey.update({
       where: { id },
       data: { isActive },
     });
 
-    return NextResponse.json({ apiKey });
+    return NextResponse.json({ accessKey });
   } catch (error) {
-    console.error("Error updating API key:", error);
+    console.error("Error updating Access key:", error);
     return NextResponse.json(
-      { error: "Failed to update API key" },
+      { error: "Failed to update Access key" },
       { status: 500 },
     );
   }
 }
 
-// Delete API key
+// Delete Access key
 export async function DELETE(request: Request) {
   const session = await auth();
 
@@ -129,20 +129,20 @@ export async function DELETE(request: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { error: "Missing API key ID" },
+        { error: "Missing Access key ID" },
         { status: 400 },
       );
     }
 
-    await prisma.apiKey.delete({
+    await prisma.accessKey.delete({
       where: { id },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting API key:", error);
+    console.error("Error deleting Access key:", error);
     return NextResponse.json(
-      { error: "Failed to delete API key" },
+      { error: "Failed to delete Access key" },
       { status: 500 },
     );
   }

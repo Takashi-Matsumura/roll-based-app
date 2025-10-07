@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { ApiKeyManager } from "@/components/ApiKeyManager";
+import { AccessKeyManager } from "@/components/AccessKeyManager";
 import { prisma } from "@/lib/prisma";
 
-export default async function ApiKeysPage() {
+export default async function AccessKeysPage() {
   const session = await auth();
 
   if (!session || session.user.role !== "ADMIN") {
     redirect("/dashboard");
   }
 
-  // Fetch all API keys with their permissions
-  const apiKeys = await prisma.apiKey.findMany({
+  // Fetch all Access keys with their permissions
+  const accessKeys = await prisma.accessKey.findMany({
     include: {
       permissions: {
         include: {
@@ -20,7 +20,7 @@ export default async function ApiKeysPage() {
       },
       _count: {
         select: {
-          userApiKeys: true,
+          userAccessKeys: true,
         },
       },
     },
@@ -39,14 +39,14 @@ export default async function ApiKeysPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">API Key Management</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Access Key Management</h1>
         <p className="text-gray-600 mt-2">
-          Issue and manage API keys with specific permissions
+          Issue and manage Access keys with specific permissions
         </p>
       </div>
 
-      <ApiKeyManager
-        apiKeys={apiKeys}
+      <AccessKeyManager
+        accessKeys={accessKeys}
         permissions={permissions}
         adminId={session.user.id}
       />

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-// Register API key for user
+// Register Access key for user
 export async function POST(request: Request) {
   const session = await auth();
 
@@ -12,18 +12,18 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { apiKey } = body;
+    const { accessKey } = body;
 
-    if (!apiKey) {
+    if (!accessKey) {
       return NextResponse.json(
-        { error: "API key is required" },
+        { error: "Access key is required" },
         { status: 400 },
       );
     }
 
-    // Find the API key
-    const foundApiKey = await prisma.apiKey.findUnique({
-      where: { key: apiKey },
+    // Find the Access key
+    const foundAccessKey = await prisma.accessKey.findUnique({
+      where: { key: accessKey },
       include: {
         permissions: {
           include: {
@@ -33,51 +33,51 @@ export async function POST(request: Request) {
       },
     });
 
-    if (!foundApiKey) {
-      return NextResponse.json({ error: "Invalid API key" }, { status: 404 });
+    if (!foundAccessKey) {
+      return NextResponse.json({ error: "Invalid Access key" }, { status: 404 });
     }
 
-    // Check if API key is active
-    if (!foundApiKey.isActive) {
+    // Check if Access key is active
+    if (!foundAccessKey.isActive) {
       return NextResponse.json(
-        { error: "This API key has been deactivated" },
+        { error: "This Access key has been deactivated" },
         { status: 403 },
       );
     }
 
-    // Check if API key has expired
-    if (new Date(foundApiKey.expiresAt) < new Date()) {
+    // Check if Access key has expired
+    if (new Date(foundAccessKey.expiresAt) < new Date()) {
       return NextResponse.json(
-        { error: "This API key has expired" },
+        { error: "This Access key has expired" },
         { status: 403 },
       );
     }
 
-    // Check if user already registered this API key
-    const existing = await prisma.userApiKey.findUnique({
+    // Check if user already registered this Access key
+    const existing = await prisma.userAccessKey.findUnique({
       where: {
-        userId_apiKeyId: {
+        userId_accessKeyId: {
           userId: session.user.id,
-          apiKeyId: foundApiKey.id,
+          accessKeyId: foundAccessKey.id,
         },
       },
     });
 
     if (existing) {
       return NextResponse.json(
-        { error: "You have already registered this API key" },
+        { error: "You have already registered this Access key" },
         { status: 400 },
       );
     }
 
-    // Register the API key for the user
-    const userApiKey = await prisma.userApiKey.create({
+    // Register the Access key for the user
+    const userAccessKey = await prisma.userAccessKey.create({
       data: {
         userId: session.user.id,
-        apiKeyId: foundApiKey.id,
+        accessKeyId: foundAccessKey.id,
       },
       include: {
-        apiKey: {
+        accessKey: {
           include: {
             permissions: {
               include: {
@@ -89,17 +89,17 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ userApiKey });
+    return NextResponse.json({ userAccessKey });
   } catch (error) {
-    console.error("Error registering API key:", error);
+    console.error("Error registering Access key:", error);
     return NextResponse.json(
-      { error: "Failed to register API key" },
+      { error: "Failed to register Access key" },
       { status: 500 },
     );
   }
 }
 
-// Remove user's registered API key
+// Remove user's registered Access key
 export async function DELETE(request: Request) {
   const session = await auth();
 
@@ -113,32 +113,32 @@ export async function DELETE(request: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { error: "Missing user API key ID" },
+        { error: "Missing user Access key ID" },
         { status: 400 },
       );
     }
 
-    // Ensure the user owns this API key registration
-    const userApiKey = await prisma.userApiKey.findUnique({
+    // Ensure the user owns this Access key registration
+    const userAccessKey = await prisma.userAccessKey.findUnique({
       where: { id },
     });
 
-    if (!userApiKey || userApiKey.userId !== session.user.id) {
+    if (!userAccessKey || userAccessKey.userId !== session.user.id) {
       return NextResponse.json(
         { error: "Not found or unauthorized" },
         { status: 404 },
       );
     }
 
-    await prisma.userApiKey.delete({
+    await prisma.userAccessKey.delete({
       where: { id },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error removing API key:", error);
+    console.error("Error removing Access key:", error);
     return NextResponse.json(
-      { error: "Failed to remove API key" },
+      { error: "Failed to remove Access key" },
       { status: 500 },
     );
   }

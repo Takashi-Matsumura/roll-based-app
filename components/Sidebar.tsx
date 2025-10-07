@@ -383,7 +383,6 @@ export function Sidebar({
           <MenuGroup
             title={t("user")}
             items={userMenuItems}
-            isOpen={isOpen}
             isSidebarCollapsed={!isOpen}
           />
 
@@ -393,7 +392,6 @@ export function Sidebar({
             <MenuGroup
               title={t("manager")}
               items={managerMenuItems}
-              isOpen={isOpen}
               color="text-blue-700"
               isSidebarCollapsed={!isOpen}
             />
@@ -405,7 +403,6 @@ export function Sidebar({
             <MenuGroup
               title={t("backOffice")}
               items={backofficeMenuItems}
-              isOpen={isOpen}
               color="text-orange-700"
               isSidebarCollapsed={!isOpen}
             />
@@ -416,7 +413,6 @@ export function Sidebar({
             <MenuGroup
               title={t("additionalFeatures")}
               items={permissionMenuItems}
-              isOpen={isOpen}
               color="text-green-700"
               isSidebarCollapsed={!isOpen}
             />
@@ -427,7 +423,6 @@ export function Sidebar({
             <MenuGroup
               title={t("admin")}
               items={adminMenuItems}
-              isOpen={isOpen}
               color="text-purple-700"
               isSidebarCollapsed={!isOpen}
             />
