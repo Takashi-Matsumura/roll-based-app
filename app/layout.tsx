@@ -34,7 +34,9 @@ export default async function RootLayout({
       >
         <ClientLayout session={session}>
           <Header session={session} />
-          <main className={`container mx-auto px-4 py-8 ${session ? "pt-24" : "pt-20"}`}>
+          <main
+            className={`container mx-auto px-4 py-8 ${session ? "pt-24" : "pt-20"}`}
+          >
             {children}
           </main>
         </ClientLayout>
