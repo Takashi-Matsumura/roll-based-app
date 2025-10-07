@@ -81,7 +81,7 @@ export const moduleRegistry: Record<string, AppModule> = {
     menuGroup: "user",
     requiredRoles: ["USER", "MANAGER", "BACKOFFICE", "ADMIN"],
     order: 2,
-    enabled: true,
+    enabled: false, // Profile is handled separately in sidebar, not as a module
     icon: (
       <svg
         key="profile-icon"

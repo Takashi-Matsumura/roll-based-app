@@ -108,10 +108,10 @@ export function AccessKeyManager({
 
   return (
     <div className="space-y-6">
-      {/* Create New API Key */}
+      {/* Create New Access Key */}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Create New API Key</h2>
+          <h2 className="text-xl font-semibold">Create New Access Key</h2>
           <button
             type="button"
             onClick={() => setIsCreating(!isCreating)}
@@ -190,25 +190,59 @@ export function AccessKeyManager({
               onClick={handleCreate}
               className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
             >
-              Generate API Key
+              Generate Access Key
             </button>
           </div>
         )}
       </div>
 
-      {/* API Keys List */}
+      {/* Access Keys List */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="px-6 py-4 border-b">
-          <h2 className="text-xl font-semibold">Issued API Keys</h2>
+          <h2 className="text-xl font-semibold">Issued Access Keys</h2>
         </div>
 
-        <div className="divide-y">
-          {accessKeys.map((accessKey) => (
-            <div key={accessKey.id} className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold">{accessKey.name}</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Key
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Permissions
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Users
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Expires
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {accessKeys.map((accessKey) => (
+                <tr key={accessKey.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="font-medium text-gray-900">
+                      {accessKey.name}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="font-mono text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded max-w-xs truncate">
+                      {accessKey.key}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {accessKey.isActive ? (
                       <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded">
                         Active
@@ -218,58 +252,49 @@ export function AccessKeyManager({
                         Inactive
                       </span>
                     )}
-                  </div>
-                  <div className="font-mono text-sm text-gray-600 bg-gray-50 p-2 rounded">
-                    {accessKey.key}
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleToggleActive(accessKey.id, accessKey.isActive)
-                    }
-                    className="px-3 py-1 text-sm border rounded hover:bg-gray-50"
-                  >
-                    {accessKey.isActive ? "Deactivate" : "Activate"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(accessKey.id)}
-                    className="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="text-sm text-gray-600">
-                  Expires:{" "}
-                  {new Date(accessKey.expiresAt).toLocaleDateString("en-US")}
-                </div>
-                <div className="text-sm text-gray-600">
-                  Users: {accessKey._count.userAccessKeys}
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-700 mb-1">
-                    Permissions:
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {accessKey.permissions.map(({ permission }) => (
-                      <span
-                        key={permission.id}
-                        className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1">
+                      {accessKey.permissions.map(({ permission }) => (
+                        <span
+                          key={permission.id}
+                          className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
+                        >
+                          {permission.displayName}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {accessKey._count.userAccessKeys}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {new Date(accessKey.expiresAt).toLocaleDateString("en-US")}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleToggleActive(accessKey.id, accessKey.isActive)
+                        }
+                        className="px-3 py-1 text-sm border rounded hover:bg-gray-50"
                       >
-                        {permission.displayName}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+                        {accessKey.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(accessKey.id)}
+                        className="px-3 py-1 text-sm text-red-600 border border-red-600 rounded hover:bg-red-50"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

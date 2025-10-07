@@ -19,7 +19,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/profile": "Profile",
   "/settings": "Settings",
-  "/api-keys": "API Keys",
+  "/access-keys": "Access Keys",
   "/reports": "Reports",
   "/analytics": "Analytics",
   "/advanced-settings": "Advanced Settings",
@@ -29,7 +29,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/backoffice/expense-claim": "Expense Claim",
   "/admin": "Admin Panel",
   "/admin/users": "User Management",
-  "/admin/api-keys": "API Key Management",
+  "/admin/access-keys": "Access Key Management",
 };
 
 export function Header({ session }: HeaderProps) {
