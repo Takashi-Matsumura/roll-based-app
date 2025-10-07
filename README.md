@@ -1,6 +1,6 @@
 # Role-Based Access Control (RBAC) Demo App
 
-Next.js 14、NextAuth.js v5、Prismaを使用したロールベースアクセス制御のデモアプリケーションです。
+Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセス制御のデモアプリケーションです。
 
 ## 技術スタック
 
@@ -11,6 +11,8 @@ Next.js 14、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - **データベース**: SQLite (開発環境)
 - **ORM**: Prisma
 - **言語**: TypeScript
+- **状態管理**: Zustand
+- **Linter/Formatter**: Biome
 
 ## 機能
 
@@ -37,11 +39,17 @@ Next.js 14、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 | 管理画面 | `/admin` | Admin のみ |
 | ユーザー管理 | `/admin/users` | Admin のみ |
 
+### UI/UX機能
+- **レスポンシブデザイン**: モバイル、タブレット、デスクトップに対応
+- **折りたたみ可能なサイドバー**: ハンバーガーメニューでサイドバーを展開/折りたたみ可能
+- **動的ページタイトル**: 現在のページ名をヘッダーに表示
+- **ロールバッジ**: ユーザーのロールを視覚的に表示
+
 ### ナビゲーションメニューの動的表示
 ユーザーのロールに応じてメニュー項目を表示/非表示：
 - **未ログイン時**: Home, Login
-- **User権限時**: Home, Dashboard, Profile, Settings, Logout
-- **Admin権限時**: 上記 + Admin Panel, Users
+- **User権限時**: Dashboard, Profile, Settings, Logout
+- **Admin権限時**: 上記 + Admin Panel, User Management
 
 ## セットアップ手順
 
@@ -127,7 +135,10 @@ role-based-app/
 │   ├── layout.tsx          # Root layout
 │   └── page.tsx            # Home page
 ├── components/              # React components
-│   ├── Header.tsx          # Navigation header
+│   ├── Header.tsx          # Page header with title
+│   ├── Sidebar.tsx         # Collapsible sidebar navigation
+│   ├── SidebarToggle.tsx   # Sidebar state management (Zustand)
+│   ├── ClientLayout.tsx    # Client-side layout wrapper
 │   ├── SignInButton.tsx    # Sign in button
 │   ├── SignOutButton.tsx   # Sign out button
 │   ├── RoleBadge.tsx       # Role display badge

@@ -1,88 +1,54 @@
-import Link from "next/link";
-import { auth } from "@/auth";
-import { SignInButton } from "./SignInButton";
-import { SignOutButton } from "./SignOutButton";
-import { RoleBadge } from "./RoleBadge";
+"use client";
 
-export async function Header() {
-  const session = await auth();
+import Link from "next/link";
+import { SignInButton } from "./SignInButton";
+import { usePathname } from "next/navigation";
+import { useSidebar } from "./SidebarToggle";
+
+interface HeaderProps {
+  session?: {
+    user: {
+      role: string;
+    };
+  } | null;
+}
+
+const PAGE_TITLES: Record<string, string> = {
+  "/": "Home",
+  "/login": "Login",
+  "/dashboard": "Dashboard",
+  "/profile": "Profile",
+  "/settings": "Settings",
+  "/admin": "Admin Panel",
+  "/admin/users": "User Management",
+};
+
+export function Header({ session }: HeaderProps) {
+  const pathname = usePathname();
+  const { isOpen } = useSidebar();
+  const pageTitle = PAGE_TITLES[pathname] || "RBAC Demo";
 
   return (
-    <header className="bg-white shadow">
-      <nav className="container mx-auto px-4 py-4">
+    <header
+      className={`bg-white shadow-sm border-b fixed top-0 right-0 left-0 ${session ? (isOpen ? "md:left-64" : "md:left-16") : ""} z-10 transition-all duration-300`}
+    >
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
+          {session ? (
+            <h1 className="text-xl font-bold text-gray-800">{pageTitle}</h1>
+          ) : (
             <Link href="/" className="text-xl font-bold text-gray-800">
               RBAC Demo
             </Link>
+          )}
 
-            {session && (
-              <div className="flex gap-4">
-                <Link
-                  href="/dashboard"
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/profile"
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  Profile
-                </Link>
-                <Link
-                  href="/settings"
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  Settings
-                </Link>
-                {session.user.role === "ADMIN" && (
-                  <>
-                    <Link
-                      href="/admin"
-                      className="text-gray-600 hover:text-gray-800"
-                    >
-                      Admin Panel
-                    </Link>
-                    <Link
-                      href="/admin/users"
-                      className="text-gray-600 hover:text-gray-800"
-                    >
-                      Users
-                    </Link>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-4">
-            {session ? (
-              <>
-                <div className="flex items-center gap-3">
-                  {session.user.image && (
-                    <img
-                      src={session.user.image}
-                      alt={session.user.name || "User"}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  )}
-                  <div className="text-sm">
-                    <div className="font-medium text-gray-800">
-                      {session.user.name}
-                    </div>
-                    <div className="text-gray-500">{session.user.email}</div>
-                  </div>
-                  <RoleBadge role={session.user.role} />
-                </div>
-                <SignOutButton />
-              </>
-            ) : (
+          {!session && (
+            <div className="flex items-center gap-4">
               <SignInButton />
-            )}
-          </div>
+            </div>
+          )}
         </div>
-      </nav>
+      </div>
     </header>
   );
 }
