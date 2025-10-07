@@ -38,7 +38,10 @@ export default async function UserAccessKeysPage() {
         </p>
       </div>
 
-      <UserAccessKeyManager userAccessKeys={userAccessKeys} userId={session.user.id} />
+      <UserAccessKeyManager
+        userAccessKeys={userAccessKeys}
+        userId={session.user.id}
+      />
     </div>
   );
 }

@@ -1,6 +1,10 @@
 "use client";
 
-import type { AccessKey, AccessKeyPermission, Permission } from "@prisma/client";
+import type {
+  AccessKey,
+  AccessKeyPermission,
+  Permission,
+} from "@prisma/client";
 import { useState } from "react";
 
 type AccessKeyWithPermissions = AccessKey & {

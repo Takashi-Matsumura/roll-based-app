@@ -44,7 +44,8 @@ export async function hasPermission(
 
     // Check if this Access key has the required permission
     const hasRequiredPermission = accessKey.permissions.some(
-      (accessKeyPermission) => accessKeyPermission.permission.name === permissionName,
+      (accessKeyPermission) =>
+        accessKeyPermission.permission.name === permissionName,
     );
 
     if (hasRequiredPermission) {

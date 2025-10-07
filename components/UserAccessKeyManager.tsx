@@ -198,23 +198,25 @@ export function UserAccessKeyManager({
                     </div>
                     <div className="text-sm text-gray-600">
                       Expires:{" "}
-                      {new Date(userAccessKey.accessKey.expiresAt).toLocaleDateString(
-                        "en-US",
-                      )}
+                      {new Date(
+                        userAccessKey.accessKey.expiresAt,
+                      ).toLocaleDateString("en-US")}
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-700 mb-1">
                         Granted Permissions:
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {userAccessKey.accessKey.permissions.map(({ permission }) => (
-                          <span
-                            key={permission.id}
-                            className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
-                          >
-                            {permission.displayName}
-                          </span>
-                        ))}
+                        {userAccessKey.accessKey.permissions.map(
+                          ({ permission }) => (
+                            <span
+                              key={permission.id}
+                              className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
+                            >
+                              {permission.displayName}
+                            </span>
+                          ),
+                        )}
                       </div>
                     </div>
                   </div>

@@ -34,7 +34,10 @@ export async function POST(request: Request) {
     });
 
     if (!foundAccessKey) {
-      return NextResponse.json({ error: "Invalid Access key" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Invalid Access key" },
+        { status: 404 },
+      );
     }
 
     // Check if Access key is active
