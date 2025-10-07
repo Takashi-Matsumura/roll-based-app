@@ -29,7 +29,7 @@ export function ClientLayout({
   menuGroups = [],
   children,
 }: ClientLayoutProps) {
-  const { isOpen } = useSidebar();
+  const { isOpen, width } = useSidebar();
 
   return (
     <>
@@ -42,7 +42,12 @@ export function ClientLayout({
           language={language}
         />
       )}
-      <div className={session ? (isOpen ? "md:pl-64" : "md:pl-16") : ""}>
+      <div
+        style={{
+          paddingLeft: session ? (isOpen ? `${width}px` : "4rem") : "0",
+        }}
+        className="transition-all duration-300"
+      >
         {children}
       </div>
     </>

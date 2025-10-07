@@ -77,9 +77,10 @@ export function MenuGroup({
               key={item.id || item.href}
               href={item.href}
               className={`flex items-center gap-3 py-3 ${color} hover:bg-gray-100 rounded-lg transition px-4`}
+              title={item.label}
             >
-              {item.icon}
-              <span>{item.label}</span>
+              <div className="flex-shrink-0">{item.icon}</div>
+              <span className="truncate">{item.label}</span>
             </Link>
           ))}
         </div>
