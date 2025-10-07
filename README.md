@@ -107,8 +107,11 @@ npm install
 
 `.env`ファイルを編集して、Google OAuth認証情報を設定します：
 
-```env
+````env
 DATABASE_URL="file:./dev.db"
+
+# Environment
+NODE_ENV="development"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
@@ -132,9 +135,19 @@ GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
 #### NEXTAUTH_SECRETの生成
 
-```bash
+````bash
 openssl rand -base64 32
 ```
+
+#### NODE_ENVの設定（開発環境）
+
+開発環境では、Google OAuthログイン時に毎回アカウント選択画面を表示するため、`NODE_ENV`を設定します：
+
+```env
+NODE_ENV="development"
+```
+
+本番環境では`production`に設定してください。
 
 ### 3. データベースのマイグレーション
 

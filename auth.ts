@@ -10,6 +10,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      ...(process.env.NODE_ENV === "development" && {
+        authorization: {
+          params: {
+            prompt: "select_account",
+          },
+        },
+      }),
     }),
   ],
   session: {

@@ -12,7 +12,7 @@ export default async function Home() {
         </h1>
         <p className="text-lg text-gray-600 mb-6">
           This is a demonstration of Role-Based Access Control (RBAC) using
-          Next.js 14, NextAuth.js v5, and Prisma.
+          Next.js 15, NextAuth.js v5, Prisma, and Tailwind CSS 4.
         </p>
 
         <div className="space-y-4">
@@ -22,10 +22,13 @@ export default async function Home() {
             </h2>
             <ul className="list-disc list-inside text-gray-600 space-y-2">
               <li>Google OAuth authentication</li>
-              <li>Three user roles: Guest, User, and Admin</li>
+              <li>Five user roles: Guest, User, Manager, Back Office, and Admin</li>
+              <li>Access key-based permission system for granular control</li>
               <li>Protected routes based on authentication and role</li>
-              <li>Dynamic navigation menu based on user role</li>
-              <li>Admin panel for user management</li>
+              <li>Dynamic navigation menu based on user role and permissions</li>
+              <li>Multi-language support (English/Japanese)</li>
+              <li>Collapsible sidebar with dark mode bottom section</li>
+              <li>Admin panel for user and access key management</li>
             </ul>
           </div>
 
@@ -38,12 +41,6 @@ export default async function Home() {
                 Sign in with your Google account to access the dashboard and
                 other protected features.
               </p>
-              <Link
-                href="/login"
-                className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              >
-                Sign In
-              </Link>
             </div>
           )}
 
