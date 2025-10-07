@@ -39,6 +39,28 @@ async function main() {
     },
   });
 
+  const manager = await prisma.user.upsert({
+    where: { email: "manager@example.com" },
+    update: {},
+    create: {
+      email: "manager@example.com",
+      name: "Manager User",
+      role: "MANAGER",
+      emailVerified: new Date(),
+    },
+  });
+
+  const backoffice = await prisma.user.upsert({
+    where: { email: "backoffice@example.com" },
+    update: {},
+    create: {
+      email: "backoffice@example.com",
+      name: "Back Office User",
+      role: "BACKOFFICE",
+      emailVerified: new Date(),
+    },
+  });
+
   // Create permissions
   const permissions = [
     {
@@ -126,6 +148,8 @@ async function main() {
   console.log(`  - ${admin.email} (${admin.role})`);
   console.log(`  - ${user1.email} (${user1.role})`);
   console.log(`  - ${user2.email} (${user2.role})`);
+  console.log(`  - ${manager.email} (${manager.role})`);
+  console.log(`  - ${backoffice.email} (${backoffice.role})`);
   console.log("\nCreated permissions:");
   console.log(`  - ${permissions.length} permissions`);
   console.log("\nCreated demo API keys:");

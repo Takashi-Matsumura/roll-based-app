@@ -22,9 +22,11 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - ユーザー情報の取得と表示（名前、メールアドレス、プロフィール画像）
 
 ### ロールベースアクセス制御
-以下の3つのロールを実装：
+以下の5つのロールを実装：
 - **Guest** (未ログインユーザー)
 - **User** (一般ユーザー)
+- **Manager** (マネージャー)
+- **Back Office** (バックオフィス)
 - **Admin** (管理者)
 
 ### APIキーベースの権限管理
@@ -56,6 +58,10 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 | プロフィール | `/profile` | 認証済み |
 | 設定 | `/settings` | 認証済み |
 | APIキー管理 | `/api-keys` | 認証済み |
+| ビジネスインテリジェンス | `/manager/bi` | Manager, Admin |
+| HR評価 | `/manager/hr-evaluation` | Manager, Admin |
+| 出張申請 | `/backoffice/business-trip` | Back Office, Admin |
+| 経費精算 | `/backoffice/expense-claim` | Back Office, Admin |
 | レポート | `/reports` | Reports権限保持者 |
 | 分析ツール | `/analytics` | Analytics権限保持者 |
 | 高度な設定 | `/advanced-settings` | Advanced Settings権限保持者 |
@@ -73,8 +79,10 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 ### ナビゲーションメニューの動的表示
 ユーザーのロールに応じてメニュー項目を表示/非表示：
 - **未ログイン時**: Home, Login
-- **User権限時**: Dashboard, Profile, Settings, Logout
-- **Admin権限時**: 上記 + Admin Panel, User Management
+- **User権限時**: Dashboard, Profile, Settings, API Keys
+- **Manager権限時**: 上記 + Business Intelligence, HR Evaluation
+- **Back Office権限時**: User権限 + Business Trip Request, Expense Claim
+- **Admin権限時**: 全メニュー + Admin Panel, User Management, API Key Management
 
 ## セットアップ手順
 
@@ -135,6 +143,8 @@ npm run db:seed
 - admin@example.com (ADMIN)
 - user1@example.com (USER)
 - user2@example.com (USER)
+- manager@example.com (MANAGER)
+- backoffice@example.com (BACKOFFICE)
 
 **デモAPIキー：**
 - `DEMO-KEY-REPORTS-2025`: レポート機能のみアクセス可能
@@ -164,6 +174,12 @@ role-based-app/
 │   │   ├── page.tsx       # Admin dashboard
 │   │   ├── users/         # User management
 │   │   └── api-keys/      # API key management
+│   ├── manager/            # Manager pages
+│   │   ├── bi/            # Business intelligence
+│   │   └── hr-evaluation/ # HR evaluation
+│   ├── backoffice/         # Back office pages
+│   │   ├── business-trip/ # Business trip request
+│   │   └── expense-claim/ # Expense claim
 │   ├── dashboard/          # User dashboard
 │   ├── profile/            # User profile
 │   ├── settings/           # User settings

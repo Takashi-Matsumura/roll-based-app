@@ -21,9 +21,23 @@ export default auth((req) => {
   }
 
   // Admin-only routes
-  const adminRoutes = ["/admin", "/admin/users"];
+  const adminRoutes = ["/admin", "/admin/users", "/admin/api-keys"];
   if (adminRoutes.some((route) => pathname.startsWith(route))) {
     if (session.user.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+  }
+
+  // Manager routes
+  if (pathname.startsWith("/manager")) {
+    if (session.user.role !== "MANAGER" && session.user.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+  }
+
+  // Back Office routes
+  if (pathname.startsWith("/backoffice")) {
+    if (session.user.role !== "BACKOFFICE" && session.user.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   }

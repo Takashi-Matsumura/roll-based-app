@@ -8,6 +8,8 @@ export function RoleBadge({ role }: RoleBadgeProps) {
   const colors = {
     GUEST: "bg-gray-100 text-gray-800",
     USER: "bg-blue-100 text-blue-800",
+    MANAGER: "bg-cyan-100 text-cyan-800",
+    BACKOFFICE: "bg-orange-100 text-orange-800",
     ADMIN: "bg-purple-100 text-purple-800",
   };
 

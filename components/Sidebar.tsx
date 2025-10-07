@@ -101,6 +101,90 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
   ];
 
+  // Manager menu items
+  const managerMenuItems = [
+    {
+      href: "/manager/bi",
+      label: "Business Intelligence",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+          />
+        </svg>
+      ),
+    },
+    {
+      href: "/manager/hr-evaluation",
+      label: "HR Evaluation",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+          />
+        </svg>
+      ),
+    },
+  ];
+
+  // Back office menu items
+  const backofficeMenuItems = [
+    {
+      href: "/backoffice/business-trip",
+      label: "Business Trip Request",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      ),
+    },
+    {
+      href: "/backoffice/expense-claim",
+      label: "Expense Claim",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+      ),
+    },
+  ];
+
   const adminMenuItems = [
     {
       href: "/admin",
@@ -273,6 +357,28 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
             isOpen={isOpen}
             isSidebarCollapsed={!isOpen}
           />
+
+          {/* Manager Menu Group */}
+          {(session.user.role === "MANAGER" || session.user.role === "ADMIN") && (
+            <MenuGroup
+              title="Manager"
+              items={managerMenuItems}
+              isOpen={isOpen}
+              color="text-blue-700"
+              isSidebarCollapsed={!isOpen}
+            />
+          )}
+
+          {/* Back Office Menu Group */}
+          {(session.user.role === "BACKOFFICE" || session.user.role === "ADMIN") && (
+            <MenuGroup
+              title="Back Office"
+              items={backofficeMenuItems}
+              isOpen={isOpen}
+              color="text-orange-700"
+              isSidebarCollapsed={!isOpen}
+            />
+          )}
 
           {/* Permission-based Menu Group */}
           {permissionMenuItems.length > 0 && (
