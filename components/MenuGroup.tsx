@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
 interface MenuItem {
   href: string;
@@ -12,7 +12,6 @@ interface MenuItem {
 interface MenuGroupProps {
   title: string;
   items: MenuItem[];
-  isOpen: boolean;
   color?: string;
   isSidebarCollapsed: boolean;
 }
@@ -20,7 +19,6 @@ interface MenuGroupProps {
 export function MenuGroup({
   title,
   items,
-  isOpen,
   color = "text-gray-700",
   isSidebarCollapsed,
 }: MenuGroupProps) {
@@ -58,6 +56,7 @@ export function MenuGroup({
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"

@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminPage() {

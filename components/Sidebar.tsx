@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import type { Session } from "next-auth";
+import { MenuGroup } from "./MenuGroup";
+import { RoleBadge } from "./RoleBadge";
 import { useSidebar } from "./SidebarToggle";
 import { SignOutButton } from "./SignOutButton";
-import { RoleBadge } from "./RoleBadge";
-import { MenuGroup } from "./MenuGroup";
-import type { Session } from "next-auth";
 
 interface SidebarProps {
   session: Session;
+  userPermissions?: string[];
 }
 
-export function Sidebar({ session }: SidebarProps) {
+export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   const { isOpen, toggle } = useSidebar();
 
   // Define menu groups
@@ -79,6 +80,25 @@ export function Sidebar({ session }: SidebarProps) {
         </svg>
       ),
     },
+    {
+      href: "/api-keys",
+      label: "API Keys",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+          />
+        </svg>
+      ),
+    },
   ];
 
   const adminMenuItems = [
@@ -120,7 +140,95 @@ export function Sidebar({ session }: SidebarProps) {
         </svg>
       ),
     },
+    {
+      href: "/admin/api-keys",
+      label: "API Key Management",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+          />
+        </svg>
+      ),
+    },
   ];
+
+  // Permission-based menu items
+  const permissionMenuItems = [];
+
+  if (userPermissions.includes("reports")) {
+    permissionMenuItems.push({
+      href: "/reports",
+      label: "Reports",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+      ),
+    });
+  }
+
+  if (userPermissions.includes("analytics")) {
+    permissionMenuItems.push({
+      href: "/analytics",
+      label: "Analytics",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      ),
+    });
+  }
+
+  if (userPermissions.includes("advanced_settings")) {
+    permissionMenuItems.push({
+      href: "/advanced-settings",
+      label: "Advanced Settings",
+      icon: (
+        <svg
+          className="w-5 h-5 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+          />
+        </svg>
+      ),
+    });
+  }
 
   return (
     <aside
@@ -165,6 +273,17 @@ export function Sidebar({ session }: SidebarProps) {
             isOpen={isOpen}
             isSidebarCollapsed={!isOpen}
           />
+
+          {/* Permission-based Menu Group */}
+          {permissionMenuItems.length > 0 && (
+            <MenuGroup
+              title="Additional Features"
+              items={permissionMenuItems}
+              isOpen={isOpen}
+              color="text-green-700"
+              isSidebarCollapsed={!isOpen}
+            />
+          )}
 
           {/* Admin Menu Group */}
           {session.user.role === "ADMIN" && (

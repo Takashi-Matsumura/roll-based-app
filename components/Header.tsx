@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { SignInButton } from "./SignInButton";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarToggle";
+import { SignInButton } from "./SignInButton";
 
 interface HeaderProps {
   session?: {
@@ -19,8 +19,10 @@ const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/profile": "Profile",
   "/settings": "Settings",
+  "/api-keys": "API Keys",
   "/admin": "Admin Panel",
   "/admin/users": "User Management",
+  "/admin/api-keys": "API Key Management",
 };
 
 export function Header({ session }: HeaderProps) {

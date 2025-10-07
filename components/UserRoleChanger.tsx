@@ -1,8 +1,8 @@
 "use client";
 
-import { Role } from "@prisma/client";
-import { useState } from "react";
+import type { Role } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface UserRoleChangerProps {
   userId: string;
@@ -36,7 +36,7 @@ export function UserRoleChanger({
       } else {
         alert("Failed to change role");
       }
-    } catch (error) {
+    } catch (_error) {
       alert("Error changing role");
     } finally {
       setIsLoading(false);

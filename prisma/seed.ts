@@ -39,11 +39,98 @@ async function main() {
     },
   });
 
+  // Create permissions
+  const permissions = [
+    {
+      name: "reports",
+      displayName: "Reports",
+      description: "Access to reports feature",
+      menuPath: "/reports",
+    },
+    {
+      name: "analytics",
+      displayName: "Analytics",
+      description: "Access to analytics feature",
+      menuPath: "/analytics",
+    },
+    {
+      name: "advanced_settings",
+      displayName: "Advanced Settings",
+      description: "Access to advanced settings feature",
+      menuPath: "/advanced-settings",
+    },
+  ];
+
+  console.log("Creating permissions...");
+  for (const permissionData of permissions) {
+    await prisma.permission.upsert({
+      where: { name: permissionData.name },
+      update: {},
+      create: permissionData,
+    });
+  }
+
+  // Create a demo API key
+  const demoApiKey = await prisma.apiKey.upsert({
+    where: { key: "DEMO-KEY-REPORTS-2025" },
+    update: {},
+    create: {
+      key: "DEMO-KEY-REPORTS-2025",
+      name: "Demo Report Access Key",
+      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+      isActive: true,
+      createdBy: admin.id,
+      permissions: {
+        create: {
+          permission: {
+            connect: { name: "reports" },
+          },
+        },
+      },
+    },
+  });
+
+  const demoApiKey2 = await prisma.apiKey.upsert({
+    where: { key: "DEMO-KEY-FULL-ACCESS-2025" },
+    update: {},
+    create: {
+      key: "DEMO-KEY-FULL-ACCESS-2025",
+      name: "Demo Full Access Key",
+      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+      isActive: true,
+      createdBy: admin.id,
+      permissions: {
+        create: [
+          {
+            permission: {
+              connect: { name: "reports" },
+            },
+          },
+          {
+            permission: {
+              connect: { name: "analytics" },
+            },
+          },
+          {
+            permission: {
+              connect: { name: "advanced_settings" },
+            },
+          },
+        ],
+      },
+    },
+  });
+
   console.log("✅ Database seeded successfully!");
   console.log("Created users:");
   console.log(`  - ${admin.email} (${admin.role})`);
   console.log(`  - ${user1.email} (${user1.role})`);
   console.log(`  - ${user2.email} (${user2.role})`);
+  console.log("\nCreated permissions:");
+  console.log(`  - ${permissions.length} permissions`);
+  console.log("\nCreated demo API keys:");
+  console.log(`  - ${demoApiKey.key} (${demoApiKey.name})`);
+  console.log(`  - ${demoApiKey2.key} (${demoApiKey2.name})`);
 }
 
 main()

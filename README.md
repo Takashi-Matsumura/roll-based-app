@@ -27,6 +27,25 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - **User** (一般ユーザー)
 - **Admin** (管理者)
 
+### APIキーベースの権限管理
+ロールベースのアクセス制御に加えて、より柔軟な権限管理のためのAPIキーシステムを実装：
+
+- **管理者機能**:
+  - 特定の機能へのアクセス権を持つAPIキーを発行
+  - 有効期限の設定
+  - APIキーの有効化/無効化
+  - 複数の権限を1つのAPIキーに付与可能
+
+- **ユーザー機能**:
+  - 管理者から受け取ったAPIキーを登録
+  - 登録したAPIキーに応じて追加機能にアクセス可能
+  - 登録済みAPIキーの管理（削除など）
+
+- **権限タイプ**:
+  - **Reports**: レポート機能へのアクセス
+  - **Analytics**: 分析ツールへのアクセス
+  - **Advanced Settings**: 高度な設定へのアクセス
+
 ### ページ構成とアクセス制御
 
 | ページ | パス | アクセス権限 |
@@ -36,8 +55,13 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 | ダッシュボード | `/dashboard` | 認証済み |
 | プロフィール | `/profile` | 認証済み |
 | 設定 | `/settings` | 認証済み |
+| APIキー管理 | `/api-keys` | 認証済み |
+| レポート | `/reports` | Reports権限保持者 |
+| 分析ツール | `/analytics` | Analytics権限保持者 |
+| 高度な設定 | `/advanced-settings` | Advanced Settings権限保持者 |
 | 管理画面 | `/admin` | Admin のみ |
 | ユーザー管理 | `/admin/users` | Admin のみ |
+| APIキー管理（管理者） | `/admin/api-keys` | Admin のみ |
 
 ### UI/UX機能
 - **レスポンシブデザイン**: モバイル、タブレット、デスクトップに対応
@@ -105,10 +129,16 @@ npx prisma migrate dev
 npm run db:seed
 ```
 
-以下のデモユーザーが作成されます：
+以下のデモユーザーとAPIキーが作成されます：
+
+**ユーザー：**
 - admin@example.com (ADMIN)
 - user1@example.com (USER)
 - user2@example.com (USER)
+
+**デモAPIキー：**
+- `DEMO-KEY-REPORTS-2025`: レポート機能のみアクセス可能
+- `DEMO-KEY-FULL-ACCESS-2025`: 全ての権限（Reports, Analytics, Advanced Settings）にアクセス可能
 
 ### 5. 開発サーバーの起動
 
@@ -124,14 +154,23 @@ npm run dev
 role-based-app/
 ├── app/                      # Next.js App Router
 │   ├── api/                 # API Routes
-│   │   └── auth/           # NextAuth.js routes
-│   │   └── admin/          # Admin API routes
+│   │   ├── auth/           # NextAuth.js routes
+│   │   ├── admin/          # Admin API routes
+│   │   │   ├── api-keys/   # API key management
+│   │   │   └── change-role/ # User role change
+│   │   └── user/           # User API routes
+│   │       └── api-keys/   # User API key registration
 │   ├── admin/              # Admin pages
 │   │   ├── page.tsx       # Admin dashboard
-│   │   └── users/         # User management
+│   │   ├── users/         # User management
+│   │   └── api-keys/      # API key management
 │   ├── dashboard/          # User dashboard
 │   ├── profile/            # User profile
 │   ├── settings/           # User settings
+│   ├── api-keys/           # User API key management
+│   ├── reports/            # Reports (permission required)
+│   ├── analytics/          # Analytics (permission required)
+│   ├── advanced-settings/  # Advanced settings (permission required)
 │   ├── login/              # Login page
 │   ├── layout.tsx          # Root layout
 │   └── page.tsx            # Home page
@@ -144,11 +183,15 @@ role-based-app/
 │   ├── SignInButton.tsx    # Sign in button
 │   ├── SignOutButton.tsx   # Sign out button
 │   ├── RoleBadge.tsx       # Role display badge
-│   └── UserRoleChanger.tsx # Role change component
+│   ├── UserRoleChanger.tsx # Role change component
+│   ├── ApiKeyManager.tsx   # Admin API key management
+│   └── UserApiKeyManager.tsx # User API key registration
 ├── lib/                     # Utility libraries
-│   └── prisma.ts           # Prisma client
+│   ├── prisma.ts           # Prisma client
+│   └── permissions.ts      # Permission checking helpers
 ├── prisma/                  # Prisma schema and migrations
 │   ├── schema.prisma       # Database schema
+│   ├── migrations/         # Database migrations
 │   └── seed.ts             # Seed data script
 ├── types/                   # TypeScript type definitions
 │   └── next-auth.d.ts      # NextAuth.js types
@@ -173,6 +216,46 @@ role-based-app/
 
 1. **ユーザー一覧表示**: すべてのユーザーを確認
 2. **ロール変更**: ユーザーのロールを変更（自分自身のロールは変更不可）
+3. **APIキー管理**:
+   - 特定の権限を持つAPIキーの発行
+   - APIキーの有効期限設定
+   - APIキーの有効化/無効化
+   - 発行済みAPIキーの一覧表示と管理
+   - 各APIキーの使用状況（登録ユーザー数）の確認
+
+## APIキー機能の使い方
+
+### 管理者側の操作
+
+1. 管理者としてログイン
+2. サイドバーから「API Key Management」を選択
+3. 「Create」ボタンをクリック
+4. キー名、有効期限、付与する権限を選択
+5. 「Generate API Key」をクリック
+6. 生成されたAPIキーをコピーしてユーザーに共有
+
+### ユーザー側の操作
+
+1. 一般ユーザーとしてログイン
+2. サイドバーから「API Keys」を選択
+3. 「Add」ボタンをクリック
+4. 受け取ったAPIキーを入力
+5. 「Register」をクリック
+6. ページがリロードされ、権限に応じた新しいメニューが表示される
+
+### デモAPIキーでのテスト
+
+シードデータで作成されるデモAPIキーを使用してテストできます：
+
+```
+DEMO-KEY-REPORTS-2025
+```
+このキーを登録すると、「Reports」メニューが表示され、レポート機能にアクセスできます。
+
+```
+DEMO-KEY-FULL-ACCESS-2025
+```
+このキーを登録すると、「Reports」「Analytics」「Advanced Settings」の全てのメニューが表示されます。
 
 ## 開発コマンド
 
