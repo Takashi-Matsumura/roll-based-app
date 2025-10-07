@@ -1,50 +1,54 @@
-"use client"
+"use client";
 
-import { Role } from "@prisma/client"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { Role } from "@prisma/client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface UserRoleChangerProps {
-  userId: string
-  currentRole: Role
-  isCurrentUser: boolean
+  userId: string;
+  currentRole: Role;
+  isCurrentUser: boolean;
 }
 
-export function UserRoleChanger({ userId, currentRole, isCurrentUser }: UserRoleChangerProps) {
-  const [role, setRole] = useState<Role>(currentRole)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+export function UserRoleChanger({
+  userId,
+  currentRole,
+  isCurrentUser,
+}: UserRoleChangerProps) {
+  const [role, setRole] = useState<Role>(currentRole);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleRoleChange = async (newRole: Role) => {
-    if (newRole === role) return
+    if (newRole === role) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch("/api/admin/change-role", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, role: newRole }),
-      })
+      });
 
       if (response.ok) {
-        setRole(newRole)
-        router.refresh()
+        setRole(newRole);
+        router.refresh();
       } else {
-        alert("Failed to change role")
+        alert("Failed to change role");
       }
     } catch (error) {
-      alert("Error changing role")
+      alert("Error changing role");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   if (isCurrentUser) {
     return (
       <span className="text-xs text-gray-500 italic">
         (You cannot change your own role)
       </span>
-    )
+    );
   }
 
   return (
@@ -57,5 +61,5 @@ export function UserRoleChanger({ userId, currentRole, isCurrentUser }: UserRole
       <option value="USER">USER</option>
       <option value="ADMIN">ADMIN</option>
     </select>
-  )
+  );
 }

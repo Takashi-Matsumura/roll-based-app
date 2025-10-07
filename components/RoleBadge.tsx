@@ -1,7 +1,7 @@
-import { Role } from "@prisma/client"
+import { Role } from "@prisma/client";
 
 interface RoleBadgeProps {
-  role: Role
+  role: Role;
 }
 
 export function RoleBadge({ role }: RoleBadgeProps) {
@@ -9,11 +9,13 @@ export function RoleBadge({ role }: RoleBadgeProps) {
     GUEST: "bg-gray-100 text-gray-800",
     USER: "bg-blue-100 text-blue-800",
     ADMIN: "bg-purple-100 text-purple-800",
-  }
+  };
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${colors[role]}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-semibold ${colors[role]}`}
+    >
       {role}
     </span>
-  )
+  );
 }

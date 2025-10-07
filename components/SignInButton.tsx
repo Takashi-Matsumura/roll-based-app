@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { signIn } from "next-auth/react"
+import { signIn } from "next-auth/react";
 
 export function SignInButton() {
   return (
@@ -10,5 +10,5 @@ export function SignInButton() {
     >
       Sign In with Google
     </button>
-  )
+  );
 }

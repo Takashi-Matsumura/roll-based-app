@@ -1,4 +1,4 @@
-import { SignInButton } from "@/components/SignInButton"
+import { SignInButton } from "@/components/SignInButton";
 
 export default function LoginPage() {
   return (
@@ -19,11 +19,11 @@ export default function LoginPage() {
           <h3 className="font-semibold text-gray-800 mb-2">About RBAC</h3>
           <p className="text-sm text-gray-600">
             This application uses role-based access control. After signing in,
-            you'll be assigned a USER role by default. Admins can change user roles
-            from the admin panel.
+            you'll be assigned a USER role by default. Admins can change user
+            roles from the admin panel.
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

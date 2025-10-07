@@ -1,8 +1,8 @@
-import Link from "next/link"
-import { auth } from "@/auth"
+import Link from "next/link";
+import { auth } from "@/auth";
 
 export default async function Home() {
-  const session = await auth()
+  const session = await auth();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -11,12 +11,15 @@ export default async function Home() {
           Welcome to RBAC Demo App
         </h1>
         <p className="text-lg text-gray-600 mb-6">
-          This is a demonstration of Role-Based Access Control (RBAC) using Next.js 14, NextAuth.js v5, and Prisma.
+          This is a demonstration of Role-Based Access Control (RBAC) using
+          Next.js 14, NextAuth.js v5, and Prisma.
         </p>
 
         <div className="space-y-4">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">Features</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+              Features
+            </h2>
             <ul className="list-disc list-inside text-gray-600 space-y-2">
               <li>Google OAuth authentication</li>
               <li>Three user roles: Guest, User, and Admin</li>
@@ -28,9 +31,12 @@ export default async function Home() {
 
           {!session && (
             <div className="mt-8 p-6 bg-blue-50 rounded-lg">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Get Started</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                Get Started
+              </h3>
               <p className="text-gray-600 mb-4">
-                Sign in with your Google account to access the dashboard and other protected features.
+                Sign in with your Google account to access the dashboard and
+                other protected features.
               </p>
               <Link
                 href="/login"
@@ -43,9 +49,12 @@ export default async function Home() {
 
           {session && (
             <div className="mt-8 p-6 bg-green-50 rounded-lg">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">You're logged in!</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                You're logged in!
+              </h3>
               <p className="text-gray-600 mb-4">
-                Explore the application with your current role: <strong>{session.user.role}</strong>
+                Explore the application with your current role:{" "}
+                <strong>{session.user.role}</strong>
               </p>
               <div className="flex gap-4">
                 <Link
@@ -68,5 +77,5 @@ export default async function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }

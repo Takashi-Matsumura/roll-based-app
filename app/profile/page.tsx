@@ -1,12 +1,12 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
-import { RoleBadge } from "@/components/RoleBadge"
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { RoleBadge } from "@/components/RoleBadge";
 
 export default async function ProfilePage() {
-  const session = await auth()
+  const session = await auth();
 
   if (!session) {
-    redirect("/login")
+    redirect("/login");
   }
 
   return (
@@ -32,7 +32,9 @@ export default async function ProfilePage() {
         </div>
 
         <div className="border-t pt-6">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Account Information</h3>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            Account Information
+          </h3>
           <div className="space-y-3">
             <div className="flex justify-between py-3 border-b">
               <span className="text-gray-600 font-medium">User ID:</span>
@@ -63,5 +65,5 @@ export default async function ProfilePage() {
         )}
       </div>
     </div>
-  )
+  );
 }

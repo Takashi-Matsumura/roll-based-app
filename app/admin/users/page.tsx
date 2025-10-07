@@ -1,27 +1,30 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
-import { prisma } from "@/lib/prisma"
-import { UserRoleChanger } from "@/components/UserRoleChanger"
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { UserRoleChanger } from "@/components/UserRoleChanger";
 
 export default async function AdminUsersPage() {
-  const session = await auth()
+  const session = await auth();
 
   if (!session || session.user.role !== "ADMIN") {
-    redirect("/dashboard")
+    redirect("/dashboard");
   }
 
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
-  })
+  });
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">User Management</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          User Management
+        </h1>
 
         <div className="mb-6 p-4 bg-yellow-50 rounded-lg">
           <p className="text-sm text-yellow-800">
-            <strong>Warning:</strong> Changing user roles will affect their access permissions immediately.
+            <strong>Warning:</strong> Changing user roles will affect their
+            access permissions immediately.
           </p>
         </div>
 
@@ -29,15 +32,26 @@ export default async function AdminUsersPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b-2 border-gray-200">
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">User</th>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">Email</th>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">Role</th>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">Actions</th>
+                <th className="text-left py-3 px-4 text-gray-700 font-semibold">
+                  User
+                </th>
+                <th className="text-left py-3 px-4 text-gray-700 font-semibold">
+                  Email
+                </th>
+                <th className="text-left py-3 px-4 text-gray-700 font-semibold">
+                  Role
+                </th>
+                <th className="text-left py-3 px-4 text-gray-700 font-semibold">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr
+                  key={user.id}
+                  className="border-b border-gray-100 hover:bg-gray-50"
+                >
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
                       {user.image && (
@@ -47,7 +61,9 @@ export default async function AdminUsersPage() {
                           className="w-10 h-10 rounded-full"
                         />
                       )}
-                      <span className="font-medium text-gray-800">{user.name}</span>
+                      <span className="font-medium text-gray-800">
+                        {user.name}
+                      </span>
                     </div>
                   </td>
                   <td className="py-4 px-4 text-gray-600">{user.email}</td>
@@ -57,8 +73,8 @@ export default async function AdminUsersPage() {
                         user.role === "ADMIN"
                           ? "bg-purple-100 text-purple-800"
                           : user.role === "USER"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-gray-100 text-gray-800"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {user.role}
@@ -84,5 +100,5 @@ export default async function AdminUsersPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

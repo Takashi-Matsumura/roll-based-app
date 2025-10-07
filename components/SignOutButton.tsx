@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { signOut } from "next-auth/react"
+import { signOut } from "next-auth/react";
 
 export function SignOutButton() {
   return (
@@ -10,5 +10,5 @@ export function SignOutButton() {
     >
       Sign Out
     </button>
-  )
+  );
 }

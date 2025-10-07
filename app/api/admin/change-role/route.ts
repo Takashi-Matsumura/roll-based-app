@@ -1,44 +1,38 @@
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
-import { Role } from "@prisma/client"
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { Role } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {
-    const session = await auth()
+    const session = await auth();
 
     // Check if user is authenticated and is an admin
     if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const body = await request.json()
-    const { userId, role } = body
+    const body = await request.json();
+    const { userId, role } = body;
 
     // Validate role
     if (!["USER", "ADMIN"].includes(role)) {
-      return NextResponse.json(
-        { error: "Invalid role" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
     // Prevent admin from changing their own role
     if (userId === session.user.id) {
       return NextResponse.json(
         { error: "Cannot change your own role" },
-        { status: 400 }
-      )
+        { status: 400 },
+      );
     }
 
     // Update user role
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { role: role as Role },
-    })
+    });
 
     return NextResponse.json({
       success: true,
@@ -46,12 +40,12 @@ export async function POST(request: Request) {
         id: updatedUser.id,
         role: updatedUser.role,
       },
-    })
+    });
   } catch (error) {
-    console.error("Error changing user role:", error)
+    console.error("Error changing user role:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
-    )
+      { status: 500 },
+    );
   }
 }

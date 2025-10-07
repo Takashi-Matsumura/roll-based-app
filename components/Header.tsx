@@ -1,11 +1,11 @@
-import Link from "next/link"
-import { auth } from "@/auth"
-import { SignInButton } from "./SignInButton"
-import { SignOutButton } from "./SignOutButton"
-import { RoleBadge } from "./RoleBadge"
+import Link from "next/link";
+import { auth } from "@/auth";
+import { SignInButton } from "./SignInButton";
+import { SignOutButton } from "./SignOutButton";
+import { RoleBadge } from "./RoleBadge";
 
 export async function Header() {
-  const session = await auth()
+  const session = await auth();
 
   return (
     <header className="bg-white shadow">
@@ -18,21 +18,36 @@ export async function Header() {
 
             {session && (
               <div className="flex gap-4">
-                <Link href="/dashboard" className="text-gray-600 hover:text-gray-800">
+                <Link
+                  href="/dashboard"
+                  className="text-gray-600 hover:text-gray-800"
+                >
                   Dashboard
                 </Link>
-                <Link href="/profile" className="text-gray-600 hover:text-gray-800">
+                <Link
+                  href="/profile"
+                  className="text-gray-600 hover:text-gray-800"
+                >
                   Profile
                 </Link>
-                <Link href="/settings" className="text-gray-600 hover:text-gray-800">
+                <Link
+                  href="/settings"
+                  className="text-gray-600 hover:text-gray-800"
+                >
                   Settings
                 </Link>
                 {session.user.role === "ADMIN" && (
                   <>
-                    <Link href="/admin" className="text-gray-600 hover:text-gray-800">
+                    <Link
+                      href="/admin"
+                      className="text-gray-600 hover:text-gray-800"
+                    >
                       Admin Panel
                     </Link>
-                    <Link href="/admin/users" className="text-gray-600 hover:text-gray-800">
+                    <Link
+                      href="/admin/users"
+                      className="text-gray-600 hover:text-gray-800"
+                    >
                       Users
                     </Link>
                   </>
@@ -53,7 +68,9 @@ export async function Header() {
                     />
                   )}
                   <div className="text-sm">
-                    <div className="font-medium text-gray-800">{session.user.name}</div>
+                    <div className="font-medium text-gray-800">
+                      {session.user.name}
+                    </div>
                     <div className="text-gray-500">{session.user.email}</div>
                   </div>
                   <RoleBadge role={session.user.role} />
@@ -67,5 +84,5 @@ export async function Header() {
         </div>
       </nav>
     </header>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const session = await auth()
+  const session = await auth();
 
   if (!session) {
-    redirect("/login")
+    redirect("/login");
   }
 
   return (
@@ -28,8 +28,12 @@ export default async function DashboardPage() {
               Your Information
             </h2>
             <div className="space-y-1 text-gray-600">
-              <p><strong>Email:</strong> {session.user.email}</p>
-              <p><strong>Role:</strong> {session.user.role}</p>
+              <p>
+                <strong>Email:</strong> {session.user.email}
+              </p>
+              <p>
+                <strong>Role:</strong> {session.user.role}
+              </p>
             </div>
           </div>
 
@@ -51,5 +55,5 @@ export default async function DashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
