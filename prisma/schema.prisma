@@ -52,6 +52,7 @@ model User {
   emailVerified DateTime?
   image         String?
   role          Role          @default(USER)
+  language      String        @default("en") // Language preference: "en" or "ja"
   accounts      Account[]
   sessions      Session[]
   userApiKeys   UserApiKey[]
