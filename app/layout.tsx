@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { ClientLayout } from "@/components/ClientLayout";
 import { Header } from "@/components/Header";
 import { getUserPermissions } from "@/lib/permissions";
+import { prisma } from "@/lib/prisma";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,10 +29,16 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
 
-  // Get user permissions if logged in
+  // Get user permissions and language if logged in
   let userPermissions: string[] = [];
+  let language = "en";
   if (session) {
     userPermissions = await getUserPermissions(session.user.id);
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { language: true },
+    });
+    language = user?.language || "en";
   }
 
   return (
@@ -39,7 +46,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
-        <ClientLayout session={session} userPermissions={userPermissions}>
+        <ClientLayout session={session} userPermissions={userPermissions} language={language}>
           <Header session={session} />
           <main
             className={`container mx-auto px-4 py-8 ${session ? "pt-24" : "pt-20"}`}

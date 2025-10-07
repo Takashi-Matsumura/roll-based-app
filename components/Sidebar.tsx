@@ -10,16 +10,66 @@ import { SignOutButton } from "./SignOutButton";
 interface SidebarProps {
   session: Session;
   userPermissions?: string[];
+  language?: string;
 }
 
-export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
+export function Sidebar({ session, userPermissions = [], language = "en" }: SidebarProps) {
   const { isOpen, toggle } = useSidebar();
+
+  // Translation function
+  const t = (key: string) => {
+    const translations: Record<string, Record<string, string>> = {
+      en: {
+        dashboard: "Dashboard",
+        profile: "Profile",
+        apiKeys: "API Keys",
+        businessIntelligence: "Business Intelligence",
+        hrEvaluation: "HR Evaluation",
+        businessTrip: "Business Trip Request",
+        expenseClaim: "Expense Claim",
+        reports: "Reports",
+        analytics: "Analytics",
+        advancedSettings: "Advanced Settings",
+        adminPanel: "Admin Panel",
+        userManagement: "User Management",
+        apiKeyManagement: "API Key Management",
+        settings: "Settings",
+        user: "USER",
+        manager: "MANAGER",
+        backOffice: "BACK OFFICE",
+        additionalFeatures: "Additional Features",
+        admin: "ADMIN",
+      },
+      ja: {
+        dashboard: "ダッシュボード",
+        profile: "プロフィール",
+        apiKeys: "APIキー",
+        businessIntelligence: "ビジネスインテリジェンス",
+        hrEvaluation: "人事評価",
+        businessTrip: "出張申請",
+        expenseClaim: "経費精算",
+        reports: "レポート",
+        analytics: "分析ツール",
+        advancedSettings: "高度な設定",
+        adminPanel: "管理画面",
+        userManagement: "ユーザー管理",
+        apiKeyManagement: "APIキー管理",
+        settings: "設定",
+        user: "ユーザー",
+        manager: "マネージャー",
+        backOffice: "バックオフィス",
+        additionalFeatures: "追加機能",
+        admin: "管理者",
+      },
+    };
+    return translations[language]?.[key] || translations.en[key] || key;
+  };
 
   // Define menu groups
   const userMenuItems = [
     {
       href: "/dashboard",
-      label: "Dashboard",
+      label: t("dashboard"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -38,7 +88,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
     {
       href: "/profile",
-      label: "Profile",
+      label: t("profile"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -57,7 +107,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
     {
       href: "/api-keys",
-      label: "API Keys",
+      label: t("apiKeys"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -80,7 +130,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   const managerMenuItems = [
     {
       href: "/manager/bi",
-      label: "Business Intelligence",
+      label: t("businessIntelligence"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -99,7 +149,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
     {
       href: "/manager/hr-evaluation",
-      label: "HR Evaluation",
+      label: t("hrEvaluation"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -122,7 +172,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   const backofficeMenuItems = [
     {
       href: "/backoffice/business-trip",
-      label: "Business Trip Request",
+      label: t("businessTrip"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -141,7 +191,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
     {
       href: "/backoffice/expense-claim",
-      label: "Expense Claim",
+      label: t("expenseClaim"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -163,7 +213,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   const adminMenuItems = [
     {
       href: "/admin",
-      label: "Admin Panel",
+      label: t("adminPanel"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -182,7 +232,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
     {
       href: "/admin/users",
-      label: "User Management",
+      label: t("userManagement"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -201,7 +251,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
     },
     {
       href: "/admin/api-keys",
-      label: "API Key Management",
+      label: t("apiKeyManagement"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -226,7 +276,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   if (userPermissions.includes("reports")) {
     permissionMenuItems.push({
       href: "/reports",
-      label: "Reports",
+      label: t("reports"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -248,7 +298,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   if (userPermissions.includes("analytics")) {
     permissionMenuItems.push({
       href: "/analytics",
-      label: "Analytics",
+      label: t("analytics"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -270,7 +320,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
   if (userPermissions.includes("advanced_settings")) {
     permissionMenuItems.push({
       href: "/advanced-settings",
-      label: "Advanced Settings",
+      label: t("advancedSettings"),
       icon: (
         <svg
           className="w-5 h-5 flex-shrink-0"
@@ -327,7 +377,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
         <nav className="space-y-4">
           {/* User Menu Group */}
           <MenuGroup
-            title="User"
+            title={t("user")}
             items={userMenuItems}
             isOpen={isOpen}
             isSidebarCollapsed={!isOpen}
@@ -336,7 +386,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
           {/* Manager Menu Group */}
           {(session.user.role === "MANAGER" || session.user.role === "ADMIN") && (
             <MenuGroup
-              title="Manager"
+              title={t("manager")}
               items={managerMenuItems}
               isOpen={isOpen}
               color="text-blue-700"
@@ -347,7 +397,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
           {/* Back Office Menu Group */}
           {(session.user.role === "BACKOFFICE" || session.user.role === "ADMIN") && (
             <MenuGroup
-              title="Back Office"
+              title={t("backOffice")}
               items={backofficeMenuItems}
               isOpen={isOpen}
               color="text-orange-700"
@@ -358,7 +408,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
           {/* Permission-based Menu Group */}
           {permissionMenuItems.length > 0 && (
             <MenuGroup
-              title="Additional Features"
+              title={t("additionalFeatures")}
               items={permissionMenuItems}
               isOpen={isOpen}
               color="text-green-700"
@@ -369,7 +419,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
           {/* Admin Menu Group */}
           {session.user.role === "ADMIN" && (
             <MenuGroup
-              title="Admin"
+              title={t("admin")}
               items={adminMenuItems}
               isOpen={isOpen}
               color="text-purple-700"
@@ -406,7 +456,7 @@ export function Sidebar({ session, userPermissions = [] }: SidebarProps) {
                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            {isOpen && <span className="font-medium">Settings</span>}
+            {isOpen && <span className="font-medium">{t("settings")}</span>}
           </Link>
 
           {/* User Info */}

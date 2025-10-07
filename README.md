@@ -75,6 +75,7 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - **メニューグループ化**: メニューをグループ化し、各グループを個別に展開/折りたたみ可能
 - **動的ページタイトル**: 現在のページ名をヘッダーに表示
 - **ロールバッジ**: ユーザーのロールを視覚的に表示
+- **多言語対応**: 英語と日本語をサポート（ユーザーごとに設定可能）
 
 ### ナビゲーションメニューの動的表示
 ユーザーのロールに応じてメニュー項目を表示/非表示：
@@ -83,6 +84,13 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - **Manager権限時**: 上記 + Business Intelligence, HR Evaluation
 - **Back Office権限時**: User権限 + Business Trip Request, Expense Claim
 - **Admin権限時**: 全メニュー + Admin Panel, User Management, API Key Management
+
+### 多言語機能
+- **対応言語**: 英語（English）、日本語（Japanese）
+- **設定方法**: ユーザー設定ページから言語を選択
+- **保存方法**: ユーザーごとにデータベースに言語設定を保存
+- **翻訳対象**: メニュー、グループタイトル、ページタイトル、設定画面
+- **自動切り替え**: 言語設定変更後、サイドバーメニューやページが自動的に選択した言語で表示
 
 ## セットアップ手順
 
@@ -169,7 +177,8 @@ role-based-app/
 │   │   │   ├── api-keys/   # API key management
 │   │   │   └── change-role/ # User role change
 │   │   └── user/           # User API routes
-│   │       └── api-keys/   # User API key registration
+│   │       ├── api-keys/   # User API key registration
+│   │       └── language/   # Language preference
 │   ├── admin/              # Admin pages
 │   │   ├── page.tsx       # Admin dashboard
 │   │   ├── users/         # User management
@@ -192,7 +201,7 @@ role-based-app/
 │   └── page.tsx            # Home page
 ├── components/              # React components
 │   ├── Header.tsx          # Page header with title
-│   ├── Sidebar.tsx         # Collapsible sidebar navigation
+│   ├── Sidebar.tsx         # Collapsible sidebar navigation (i18n)
 │   ├── SidebarToggle.tsx   # Sidebar state management (Zustand)
 │   ├── ClientLayout.tsx    # Client-side layout wrapper
 │   ├── MenuGroup.tsx       # Menu group with expand/collapse
@@ -201,7 +210,11 @@ role-based-app/
 │   ├── RoleBadge.tsx       # Role display badge
 │   ├── UserRoleChanger.tsx # Role change component
 │   ├── ApiKeyManager.tsx   # Admin API key management
-│   └── UserApiKeyManager.tsx # User API key registration
+│   ├── UserApiKeyManager.tsx # User API key registration
+│   └── LanguageSwitcher.tsx # Language selection component
+├── messages/                # Translation files
+│   ├── en.json             # English translations
+│   └── ja.json             # Japanese translations
 ├── lib/                     # Utility libraries
 │   ├── prisma.ts           # Prisma client
 │   └── permissions.ts      # Permission checking helpers
