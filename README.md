@@ -42,6 +42,7 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 ### UI/UX機能
 - **レスポンシブデザイン**: モバイル、タブレット、デスクトップに対応
 - **折りたたみ可能なサイドバー**: ハンバーガーメニューでサイドバーを展開/折りたたみ可能
+- **メニューグループ化**: メニューをグループ化し、各グループを個別に展開/折りたたみ可能
 - **動的ページタイトル**: 現在のページ名をヘッダーに表示
 - **ロールバッジ**: ユーザーのロールを視覚的に表示
 
@@ -139,6 +140,7 @@ role-based-app/
 │   ├── Sidebar.tsx         # Collapsible sidebar navigation
 │   ├── SidebarToggle.tsx   # Sidebar state management (Zustand)
 │   ├── ClientLayout.tsx    # Client-side layout wrapper
+│   ├── MenuGroup.tsx       # Menu group with expand/collapse
 │   ├── SignInButton.tsx    # Sign in button
 │   ├── SignOutButton.tsx   # Sign out button
 │   ├── RoleBadge.tsx       # Role display badge
