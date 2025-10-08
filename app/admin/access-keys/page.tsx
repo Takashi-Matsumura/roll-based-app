@@ -67,7 +67,7 @@ export default async function AccessKeysPage() {
 
   // Get all available modules except ADMIN menu group
   const allModules = getEnabledModules();
-  const modules = allModules.filter((module) => module.menuGroup !== "ADMIN");
+  const modules = allModules.filter((module) => module.menuGroup.toLowerCase() !== "admin");
 
   return (
     <div className="space-y-6">

@@ -37,9 +37,17 @@ export function AccessKeyManager({
 }: AccessKeyManagerProps) {
   const [accessKeys, setAccessKeys] = useState(initialAccessKeys);
   const [isCreating, setIsCreating] = useState(false);
+
+  // デフォルトは1年後
+  const getDefaultExpiryDate = () => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    return date.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState({
     name: "",
-    expiresInDays: 365,
+    expiresAt: getDefaultExpiryDate(),
     targetUserId: "",
     menuPaths: [] as string[],
   });
@@ -77,7 +85,7 @@ export function AccessKeyManager({
       setAccessKeys([accessKey, ...accessKeys]);
       setFormData({
         name: "",
-        expiresInDays: 365,
+        expiresAt: getDefaultExpiryDate(),
         targetUserId: "",
         menuPaths: [],
       });
@@ -225,19 +233,19 @@ export function AccessKeyManager({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("Expiration (days)", "有効期限（日数）")}
+                {t("Expiration Date", "有効期限")}
               </label>
               <input
-                type="number"
-                value={formData.expiresInDays}
+                type="date"
+                value={formData.expiresAt}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    expiresInDays: Number.parseInt(e.target.value, 10) || 365,
+                    expiresAt: e.target.value,
                   })
                 }
                 className="w-full px-3 py-2 border rounded-lg"
-                min="1"
+                min={new Date().toISOString().split('T')[0]}
               />
             </div>
 

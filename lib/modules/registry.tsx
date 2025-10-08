@@ -249,7 +249,7 @@ export const moduleRegistry: Record<string, AppModule> = {
     menuGroup: "permission",
     requiredPermissions: ["reports"],
     order: 1,
-    enabled: true,
+    enabled: false,
     icon: (
       <svg
         key="reports-icon"
@@ -277,7 +277,7 @@ export const moduleRegistry: Record<string, AppModule> = {
     menuGroup: "permission",
     requiredPermissions: ["analytics"],
     order: 2,
-    enabled: true,
+    enabled: false,
     icon: (
       <svg
         key="analytics-icon"
@@ -305,7 +305,7 @@ export const moduleRegistry: Record<string, AppModule> = {
     menuGroup: "permission",
     requiredPermissions: ["advanced_settings"],
     order: 3,
-    enabled: true,
+    enabled: false,
     icon: (
       <svg
         key="advancedSettings-icon"

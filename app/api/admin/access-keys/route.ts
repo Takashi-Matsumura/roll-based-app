@@ -28,11 +28,11 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, expiresInDays, targetUserId, menuPaths } = body;
+    const { name, expiresAt, targetUserId, menuPaths } = body;
 
     if (
       !name ||
-      !expiresInDays ||
+      !expiresAt ||
       !targetUserId ||
       !menuPaths ||
       menuPaths.length === 0
@@ -56,9 +56,7 @@ export async function POST(request: Request) {
     }
 
     const key = generateAccessKey();
-    const expiresAt = new Date(
-      Date.now() + expiresInDays * 24 * 60 * 60 * 1000,
-    );
+    const expiryDate = new Date(expiresAt);
 
     const accessKey = await prisma.accessKey.create({
       data: {
@@ -66,7 +64,7 @@ export async function POST(request: Request) {
         name,
         targetUserId,
         menuPaths: JSON.stringify(menuPaths), // Store as JSON string
-        expiresAt,
+        expiresAt: expiryDate,
         isActive: true,
         createdBy: session.user.id,
       },

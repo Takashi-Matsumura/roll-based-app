@@ -52,6 +52,7 @@ export default async function UserAccessKeysPage() {
       <UserAccessKeyManager
         userAccessKeys={userAccessKeys}
         userId={session.user.id}
+        language={language}
       />
     </div>
   );
