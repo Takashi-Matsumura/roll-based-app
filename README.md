@@ -91,11 +91,83 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - **Admin権限時**: 全メニュー + Admin Panel, User Management, Access Key Management
 
 ### 多言語機能
+
+#### 概要
 - **対応言語**: 英語（English）、日本語（Japanese）
 - **設定方法**: ユーザー設定ページから言語を選択
 - **保存方法**: ユーザーごとにデータベースに言語設定を保存
-- **翻訳対象**: メニュー、グループタイトル、ページタイトル、設定画面
+- **翻訳対象**: メニュー、グループタイトル、ページタイトル、UI要素、モジュールコンテンツ
 - **自動切り替え**: 言語設定変更後、サイドバーメニューやページが自動的に選択した言語で表示
+
+#### 実装方針
+
+**アーキテクチャ:**
+```
+lib/i18n/
+  ├── get-language.ts        # 言語取得ヘルパー関数
+  └── page-titles.ts         # 共通ページタイトル翻訳
+
+app/[module]/
+  ├── page.tsx              # モジュールページ
+  └── translations.ts       # モジュール固有の翻訳
+```
+
+**翻訳ファイルの構造:**
+```typescript
+// app/dashboard/translations.ts
+export const dashboardTranslations = {
+  en: {
+    title: "Dashboard",
+    welcome: "Welcome to Your Dashboard",
+    // ...
+  },
+  ja: {
+    title: "ダッシュボード",
+    welcome: "ダッシュボードへようこそ",
+    // ...
+  },
+} as const;
+```
+
+**使用方法（Server Component）:**
+```typescript
+import { getLanguage } from "@/lib/i18n/get-language";
+import { dashboardTranslations } from "./translations";
+
+export default async function DashboardPage() {
+  const language = await getLanguage();
+  const t = dashboardTranslations[language];
+
+  return <h1>{t.title}</h1>;
+}
+```
+
+**使用方法（Client Component）:**
+```typescript
+// propsとして言語を受け取る
+interface Props {
+  language?: string;
+}
+
+export function Component({ language = "en" }: Props) {
+  const t = (en: string, ja: string) => language === "ja" ? ja : en;
+  return <button>{t("Sign Out", "サインアウト")}</button>;
+}
+```
+
+**翻訳のベストプラクティス:**
+1. **モジュールごとに翻訳ファイルを作成** - スケーラビリティと保守性の向上
+2. **型安全性を維持** - TypeScriptの`as const`を使用
+3. **共通UI要素は関数で実装** - 小規模な翻訳には`t()`関数を使用
+4. **ページタイトルは一元管理** - `lib/i18n/page-titles.ts`で管理
+5. **新しいモジュール追加時は必ず翻訳ファイルも作成**
+
+**メリット:**
+- ✅ コードと翻訳の分離
+- ✅ 型安全性（翻訳漏れを防ぐ）
+- ✅ モジュール独立性
+- ✅ 翻訳者が編集しやすい
+- ✅ 3言語以上への拡張が容易
 
 ## セットアップ手順
 
