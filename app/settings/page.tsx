@@ -1,9 +1,18 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import enMessages from "@/messages/en.json";
-import jaMessages from "@/messages/ja.json";
+import { getLanguage } from "@/lib/i18n/get-language";
+import { settingsTranslations } from "./translations";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const language = await getLanguage();
+  const t = settingsTranslations[language];
+
+  return {
+    title: t.title,
+  };
+}
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -12,39 +21,30 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  // Get user's language preference
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { language: true },
-  });
-
-  const language = user?.language || "en";
-  const t = language === "ja" ? jaMessages : enMessages;
+  const language = await getLanguage();
+  const t = settingsTranslations[language];
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          {t.settings.title}
-        </h1>
-        <p className="text-gray-600 mb-6">{t.settings.description}</p>
+        <p className="text-gray-600 mb-6">{t.description}</p>
 
         <div className="space-y-6">
           {/* Language Settings */}
           <LanguageSwitcher
             currentLanguage={language}
-            translations={t.settings.language}
+            translations={t.language}
           />
 
           {/* Account Settings */}
           <div className="border-b pb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Account Settings
+              {t.accountSettings}
             </h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Display Name
+                  {t.displayName}
                 </label>
                 <input
                   type="text"
@@ -55,7 +55,7 @@ export default async function SettingsPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
+                  {t.emailAddress}
                 </label>
                 <input
                   type="email"
@@ -70,16 +70,16 @@ export default async function SettingsPage() {
           {/* Preferences */}
           <div className="border-b pb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Preferences
+              {t.preferences}
             </h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium text-gray-800">
-                    Email Notifications
+                    {t.emailNotifications}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Receive email updates about your account
+                    {t.emailNotificationsDesc}
                   </p>
                 </div>
                 <input
@@ -91,11 +91,9 @@ export default async function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium text-gray-800">
-                    Two-Factor Authentication
+                    {t.twoFactor}
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    Add an extra layer of security
-                  </p>
+                  <p className="text-sm text-gray-600">{t.twoFactorDesc}</p>
                 </div>
                 <input
                   type="checkbox"
@@ -108,8 +106,7 @@ export default async function SettingsPage() {
 
           <div className="p-4 bg-gray-50 rounded-lg">
             <p className="text-sm text-gray-600">
-              <strong>Note:</strong> This is a demo application. Some settings
-              changes are not saved.
+              <strong>{t.note}</strong> {t.noteMessage}
             </p>
           </div>
         </div>

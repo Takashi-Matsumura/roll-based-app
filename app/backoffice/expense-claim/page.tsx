@@ -1,5 +1,17 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { getLanguage } from "@/lib/i18n/get-language";
+import { expenseClaimTranslations } from "./translations";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const language = await getLanguage();
+  const t = expenseClaimTranslations[language];
+
+  return {
+    title: t.title,
+  };
+}
 
 export default async function ExpenseClaimPage() {
   const session = await auth();
@@ -10,6 +22,9 @@ export default async function ExpenseClaimPage() {
   ) {
     redirect("/dashboard");
   }
+
+  const language = await getLanguage();
+  const t = expenseClaimTranslations[language];
 
   const mockClaims = [
     {
@@ -49,10 +64,7 @@ export default async function ExpenseClaimPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Expense Claim</h1>
-        <p className="text-gray-600 mt-2">
-          Process and approve employee expense claims
-        </p>
+        <p className="text-gray-600">{t.description}</p>
       </div>
 
       {/* Summary Cards */}
@@ -270,12 +282,10 @@ export default async function ExpenseClaimPage() {
             />
           </svg>
           <div>
-            <h3 className="font-semibold text-yellow-900">Mock Data</h3>
-            <p className="text-sm text-yellow-800 mt-1">
-              This page displays sample data for demonstration purposes. In a
-              production environment, this would connect to real expense
-              management systems.
-            </p>
+            <h3 className="font-semibold text-yellow-900">
+              {t.mockDataTitle}
+            </h3>
+            <p className="text-sm text-yellow-800 mt-1">{t.mockDataMessage}</p>
           </div>
         </div>
       </div>

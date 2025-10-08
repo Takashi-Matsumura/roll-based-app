@@ -6,6 +6,11 @@ import { MenuGroup } from "./MenuGroup";
 import { RoleBadge } from "./RoleBadge";
 import { useSidebar } from "./SidebarToggle";
 import { SignOutButton } from "./SignOutButton";
+import {
+  menuGroupConfigs,
+  isMenuGroupVisible,
+  type MenuGroupConfig,
+} from "@/lib/menu-metadata";
 
 interface SidebarProps {
   session: Session;
@@ -40,7 +45,7 @@ export function Sidebar({
         settings: "Settings",
         user: "USER",
         manager: "MANAGER",
-        backOffice: "BACK OFFICE",
+        backOffice: "BACKOFFICE",
         additionalFeatures: "Additional Features",
         admin: "ADMIN",
       },
@@ -69,216 +74,218 @@ export function Sidebar({
     return translations[language]?.[key] || translations.en[key] || key;
   };
 
-  // Define menu groups
-  const userMenuItems = [
-    {
-      href: "/dashboard",
-      label: t("dashboard"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/profile",
-      label: t("profile"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/api-keys",
-      label: t("apiKeys"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-          />
-        </svg>
-      ),
-    },
-  ];
+  // Define all menu items organized by menu group
+  const menuItemsByGroup: Record<string, Array<{
+    href: string;
+    label: string;
+    icon: React.ReactNode;
+  }>> = {
+    USER: [
+      {
+        href: "/dashboard",
+        label: t("dashboard"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            />
+          </svg>
+        ),
+      },
+      {
+        href: "/profile",
+        label: t("profile"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+        ),
+      },
+      {
+        href: "/access-keys",
+        label: t("apiKeys"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+            />
+          </svg>
+        ),
+      },
+    ],
+    MANAGER: [
+      {
+        href: "/manager/bi",
+        label: t("businessIntelligence"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        ),
+      },
+      {
+        href: "/manager/hr-evaluation",
+        label: t("hrEvaluation"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+            />
+          </svg>
+        ),
+      },
+    ],
+    BACKOFFICE: [
+      {
+        href: "/backoffice/business-trip",
+        label: t("businessTrip"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        ),
+      },
+      {
+        href: "/backoffice/expense-claim",
+        label: t("expenseClaim"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+        ),
+      },
+    ],
+    ADMIN: [
+      {
+        href: "/admin",
+        label: t("adminPanel"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        ),
+      },
+      {
+        href: "/admin/users",
+        label: t("userManagement"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+        ),
+      },
+      {
+        href: "/admin/access-keys",
+        label: t("apiKeyManagement"),
+        icon: (
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+            />
+          </svg>
+        ),
+      },
+    ],
+  };
 
-  // Manager menu items
-  const managerMenuItems = [
-    {
-      href: "/manager/bi",
-      label: t("businessIntelligence"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/manager/hr-evaluation",
-      label: t("hrEvaluation"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-          />
-        </svg>
-      ),
-    },
-  ];
-
-  // Back office menu items
-  const backofficeMenuItems = [
-    {
-      href: "/backoffice/business-trip",
-      label: t("businessTrip"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/backoffice/expense-claim",
-      label: t("expenseClaim"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
-      ),
-    },
-  ];
-
-  const adminMenuItems = [
-    {
-      href: "/admin",
-      label: t("adminPanel"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/admin/users",
-      label: t("userManagement"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/admin/api-keys",
-      label: t("apiKeyManagement"),
-      icon: (
-        <svg
-          className="w-5 h-5 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-          />
-        </svg>
-      ),
-    },
-  ];
-
-  // Permission-based menu items
-  const permissionMenuItems = [];
-
+  // Add permission-based menu items to BACKOFFICE group
   if (userPermissions.includes("reports")) {
-    permissionMenuItems.push({
+    if (!menuItemsByGroup.BACKOFFICE) {
+      menuItemsByGroup.BACKOFFICE = [];
+    }
+    menuItemsByGroup.BACKOFFICE.push({
       href: "/reports",
       label: t("reports"),
       icon: (
@@ -300,7 +307,10 @@ export function Sidebar({
   }
 
   if (userPermissions.includes("analytics")) {
-    permissionMenuItems.push({
+    if (!menuItemsByGroup.BACKOFFICE) {
+      menuItemsByGroup.BACKOFFICE = [];
+    }
+    menuItemsByGroup.BACKOFFICE.push({
       href: "/analytics",
       label: t("analytics"),
       icon: (
@@ -322,7 +332,10 @@ export function Sidebar({
   }
 
   if (userPermissions.includes("advanced_settings")) {
-    permissionMenuItems.push({
+    if (!menuItemsByGroup.BACKOFFICE) {
+      menuItemsByGroup.BACKOFFICE = [];
+    }
+    menuItemsByGroup.BACKOFFICE.push({
       href: "/advanced-settings",
       label: t("advancedSettings"),
       icon: (
@@ -342,6 +355,18 @@ export function Sidebar({
       ),
     });
   }
+
+  // Get sorted menu groups and filter by visibility
+  const visibleMenuGroups = Object.values(menuGroupConfigs)
+    .sort((a, b) => a.order - b.order)
+    .filter((group) => {
+      // Check if group is visible to current user
+      if (!isMenuGroupVisible(group.id, session.user.role)) {
+        return false;
+      }
+      // Check if group has any menu items
+      return menuItemsByGroup[group.id]?.length > 0;
+    });
 
   return (
     <aside
@@ -379,54 +404,21 @@ export function Sidebar({
 
         {/* Navigation Menu */}
         <nav className="space-y-4">
-          {/* User Menu Group */}
-          <MenuGroup
-            title={t("user")}
-            items={userMenuItems}
-            isSidebarCollapsed={!isOpen}
-          />
+          {/* Dynamically render all visible menu groups */}
+          {visibleMenuGroups.map((group) => {
+            const items = menuItemsByGroup[group.id] || [];
+            if (items.length === 0) return null;
 
-          {/* Manager Menu Group */}
-          {(session.user.role === "MANAGER" ||
-            session.user.role === "ADMIN") && (
-            <MenuGroup
-              title={t("manager")}
-              items={managerMenuItems}
-              color="text-blue-700"
-              isSidebarCollapsed={!isOpen}
-            />
-          )}
-
-          {/* Back Office Menu Group */}
-          {(session.user.role === "BACKOFFICE" ||
-            session.user.role === "ADMIN") && (
-            <MenuGroup
-              title={t("backOffice")}
-              items={backofficeMenuItems}
-              color="text-orange-700"
-              isSidebarCollapsed={!isOpen}
-            />
-          )}
-
-          {/* Permission-based Menu Group */}
-          {permissionMenuItems.length > 0 && (
-            <MenuGroup
-              title={t("additionalFeatures")}
-              items={permissionMenuItems}
-              color="text-green-700"
-              isSidebarCollapsed={!isOpen}
-            />
-          )}
-
-          {/* Admin Menu Group */}
-          {session.user.role === "ADMIN" && (
-            <MenuGroup
-              title={t("admin")}
-              items={adminMenuItems}
-              color="text-purple-700"
-              isSidebarCollapsed={!isOpen}
-            />
-          )}
+            return (
+              <MenuGroup
+                key={group.id}
+                title={group.label[language as "en" | "ja"] || group.label.en}
+                items={items}
+                color={group.color}
+                isSidebarCollapsed={!isOpen}
+              />
+            );
+          })}
         </nav>
 
         {/* User Info and Sign Out Button at Bottom */}

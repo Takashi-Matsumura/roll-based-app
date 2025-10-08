@@ -1,6 +1,18 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { hasPermission } from "@/lib/permissions";
+import { getLanguage } from "@/lib/i18n/get-language";
+import { reportsTranslations } from "./translations";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const language = await getLanguage();
+  const t = reportsTranslations[language];
+
+  return {
+    title: t.title,
+  };
+}
 
 export default async function ReportsPage() {
   const session = await auth();
@@ -16,13 +28,13 @@ export default async function ReportsPage() {
     redirect("/dashboard?error=no_permission");
   }
 
+  const language = await getLanguage();
+  const t = reportsTranslations[language];
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">レポート閲覧</h1>
-        <p className="text-gray-600 mt-2">
-          APIキーによって付与された権限でアクセスしています
-        </p>
+        <p className="text-gray-600">{t.description}</p>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
@@ -41,12 +53,9 @@ export default async function ReportsPage() {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="font-semibold text-green-900">アクセス許可</h3>
+            <h3 className="font-semibold text-green-900">{t.accessGranted}</h3>
           </div>
-          <p className="text-sm text-green-800">
-            このページにアクセスするには「レポート閲覧」権限が必要です。
-            あなたは有効なAPIキーを登録しているため、アクセスできます。
-          </p>
+          <p className="text-sm text-green-800">{t.accessMessage}</p>
         </div>
 
         <h2 className="text-xl font-semibold mb-4">月次レポート</h2>

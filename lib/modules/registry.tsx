@@ -19,7 +19,7 @@ export const menuGroups: Record<string, MenuGroup> = {
   },
   backoffice: {
     id: "backoffice",
-    name: "BACK OFFICE",
+    name: "BACKOFFICE",
     nameJa: "バックオフィス",
     color: "text-orange-700",
     order: 3,

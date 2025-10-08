@@ -1,5 +1,17 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { getLanguage } from "@/lib/i18n/get-language";
+import { hrEvaluationTranslations } from "./translations";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const language = await getLanguage();
+  const t = hrEvaluationTranslations[language];
+
+  return {
+    title: t.title,
+  };
+}
 
 export default async function HREvaluationPage() {
   const session = await auth();
@@ -10,6 +22,9 @@ export default async function HREvaluationPage() {
   ) {
     redirect("/dashboard");
   }
+
+  const language = await getLanguage();
+  const t = hrEvaluationTranslations[language];
 
   const mockEmployees = [
     {
@@ -45,10 +60,7 @@ export default async function HREvaluationPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">HR Evaluation</h1>
-        <p className="text-gray-600 mt-2">
-          Manage employee performance reviews and evaluations
-        </p>
+        <p className="text-gray-600">{t.description}</p>
       </div>
 
       {/* Summary Cards */}
@@ -232,12 +244,10 @@ export default async function HREvaluationPage() {
             />
           </svg>
           <div>
-            <h3 className="font-semibold text-yellow-900">Mock Data</h3>
-            <p className="text-sm text-yellow-800 mt-1">
-              This page displays sample data for demonstration purposes. In a
-              production environment, this would connect to real HR management
-              systems.
-            </p>
+            <h3 className="font-semibold text-yellow-900">
+              {t.mockDataTitle}
+            </h3>
+            <p className="text-sm text-yellow-800 mt-1">{t.mockDataMessage}</p>
           </div>
         </div>
       </div>

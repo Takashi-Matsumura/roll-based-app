@@ -1,6 +1,18 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { hasPermission } from "@/lib/permissions";
+import { getLanguage } from "@/lib/i18n/get-language";
+import { analyticsTranslations } from "./translations";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const language = await getLanguage();
+  const t = analyticsTranslations[language];
+
+  return {
+    title: t.title,
+  };
+}
 
 export default async function AnalyticsPage() {
   const session = await auth();
@@ -16,11 +28,13 @@ export default async function AnalyticsPage() {
     redirect("/dashboard?error=no_permission");
   }
 
+  const language = await getLanguage();
+  const t = analyticsTranslations[language];
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">分析ツール</h1>
-        <p className="text-gray-600 mt-2">高度な分析機能とデータ可視化ツール</p>
+        <p className="text-gray-600">{t.description}</p>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
@@ -39,11 +53,11 @@ export default async function AnalyticsPage() {
                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
               />
             </svg>
-            <h3 className="font-semibold text-blue-900">分析ツール権限</h3>
+            <h3 className="font-semibold text-blue-900">
+              {t.analyticsPermission}
+            </h3>
           </div>
-          <p className="text-sm text-blue-800">
-            このページにアクセスするには「分析ツール」権限が必要です。
-          </p>
+          <p className="text-sm text-blue-800">{t.accessMessage}</p>
         </div>
 
         <div className="space-y-6">

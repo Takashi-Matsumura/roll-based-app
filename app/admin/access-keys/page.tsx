@@ -2,6 +2,18 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { AccessKeyManager } from "@/components/AccessKeyManager";
 import { prisma } from "@/lib/prisma";
+import { getLanguage } from "@/lib/i18n/get-language";
+import { adminAccessKeysTranslations } from "./translations";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const language = await getLanguage();
+  const t = adminAccessKeysTranslations[language];
+
+  return {
+    title: t.title,
+  };
+}
 
 export default async function AccessKeysPage() {
   const session = await auth();
@@ -9,6 +21,9 @@ export default async function AccessKeysPage() {
   if (!session || session.user.role !== "ADMIN") {
     redirect("/dashboard");
   }
+
+  const language = await getLanguage();
+  const t = adminAccessKeysTranslations[language];
 
   // Fetch all Access keys with their permissions
   const accessKeys = await prisma.accessKey.findMany({
@@ -39,12 +54,7 @@ export default async function AccessKeysPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
-          Access Key Management
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Issue and manage Access keys with specific permissions
-        </p>
+        <p className="text-gray-600">{t.description}</p>
       </div>
 
       <AccessKeyManager

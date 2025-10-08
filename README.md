@@ -22,12 +22,13 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - ユーザー情報の取得と表示（名前、メールアドレス、プロフィール画像）
 
 ### ロールベースアクセス制御
-以下の5つのロールを実装：
+以下の4つのロールを実装：
 - **Guest** (未ログインユーザー)
 - **User** (一般ユーザー)
 - **Manager** (マネージャー)
-- **Back Office** (バックオフィス)
 - **Admin** (管理者)
+
+**注**: BACKOFFICEメニューグループは全ユーザーに表示されますが、ロールベースではなくメニューグループとして機能します。
 
 ### アクセスキーベースの権限管理
 ロールベースのアクセス制御に加えて、より柔軟な権限管理のためのアクセスキーシステムを実装：
@@ -60,8 +61,8 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 | アクセスキー管理 | `/access-keys` | 認証済み |
 | ビジネスインテリジェンス | `/manager/bi` | Manager, Admin |
 | HR評価 | `/manager/hr-evaluation` | Manager, Admin |
-| 出張申請 | `/backoffice/business-trip` | Back Office, Admin |
-| 経費精算 | `/backoffice/expense-claim` | Back Office, Admin |
+| 出張申請 | `/backoffice/business-trip` | 全ユーザー |
+| 経費精算 | `/backoffice/expense-claim` | 全ユーザー |
 | レポート | `/reports` | Reports権限保持者 |
 | 分析ツール | `/analytics` | Analytics権限保持者 |
 | 高度な設定 | `/advanced-settings` | Advanced Settings権限保持者 |
@@ -83,12 +84,36 @@ Next.js 15、NextAuth.js v5、Prismaを使用したロールベースアクセ�
 - **スクロール可能なメニュー**: メニューグループのみスクロール、ユーザー情報は下部固定
 
 ### ナビゲーションメニューの動的表示
-ユーザーのロールに応じてメニュー項目を表示/非表示：
-- **未ログイン時**: Home, Login
-- **User権限時**: Dashboard, Access Keys + ボトムセクション（Profile, Settings）
-- **Manager権限時**: 上記 + Business Intelligence, HR Evaluation
-- **Back Office権限時**: User権限 + Business Trip Request, Expense Claim
-- **Admin権限時**: 全メニュー + Admin Panel, User Management, Access Key Management
+
+#### メニューグループ構成
+メニューは以下の4つのグループに分類され、メタデータベースで管理されています：
+
+1. **USER グループ** (常に表示)
+   - Dashboard
+   - Profile
+   - Access Keys
+
+2. **MANAGER グループ** (MANAGER、ADMINロールのみ表示)
+   - Business Intelligence
+   - HR Evaluation
+
+3. **BACKOFFICE グループ** (常に表示)
+   - Business Trip Request
+   - Expense Claim
+   - Reports (権限保持者のみ)
+   - Analytics (権限保持者のみ)
+   - Advanced Settings (権限保持者のみ)
+
+4. **ADMIN グループ** (ADMINロールのみ表示)
+   - Admin Panel
+   - User Management
+   - Access Key Management
+
+#### 動的メニューグループシステム
+新しいメニューグループを簡単に追加できる拡張性の高いアーキテクチャを実装：
+- `lib/menu-metadata.ts`でメニューグループの設定を一元管理
+- グループごとに表示ラベル、色、表示順序、表示対象ロールを定義
+- 未知のメニューグループはデフォルトで全員に表示
 
 ### 多言語機能
 
@@ -242,7 +267,7 @@ npm run db:seed
 - user1@example.com (USER)
 - user2@example.com (USER)
 - manager@example.com (MANAGER)
-- backoffice@example.com (BACKOFFICE)
+- backoffice@example.com (USER) ※BACKOFFICEロールは廃止されました
 
 **デモアクセスキー：**
 - `DEMO-KEY-REPORTS-2025`: レポート機能のみアクセス可能
@@ -308,6 +333,10 @@ role-based-app/
 ├── lib/                     # Utility libraries
 │   ├── prisma.ts           # Prisma client
 │   ├── permissions.ts      # Permission checking helpers
+│   ├── menu-metadata.ts    # Menu group metadata and access control
+│   ├── i18n/               # Internationalization
+│   │   ├── get-language.ts # Language preference helper
+│   │   └── page-titles.ts  # Common page title translations
 │   └── modules/            # Module registry
 │       └── registry.tsx    # App module definitions
 ├── prisma/                  # Prisma schema and migrations
