@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import type { Session } from "next-auth";
 import { MenuGroup } from "./MenuGroup";
 import { RoleBadge } from "./RoleBadge";
@@ -456,12 +457,21 @@ export function Sidebar({
           {isOpen && (
             <div className="mb-4">
               <div className="flex items-center gap-3 mb-3">
-                {session.user.image && (
-                  <img
-                    src={session.user.image}
-                    alt={session.user.name || "User"}
-                    className="w-10 h-10 rounded-full"
-                  />
+                {session.user.image ? (
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User"}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-sm font-semibold">
+                      {session.user.name?.[0]?.toUpperCase() || "?"}
+                    </span>
+                  </div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-gray-800 text-sm truncate">
@@ -477,13 +487,24 @@ export function Sidebar({
           )}
 
           {/* User Avatar Only (when collapsed) */}
-          {!isOpen && session.user.image && (
+          {!isOpen && (
             <div className="mb-4 flex justify-center">
-              <img
-                src={session.user.image}
-                alt={session.user.name || "User"}
-                className="w-8 h-8 rounded-full"
-              />
+              {session.user.image ? (
+                <div className="relative w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                  <Image
+                    src={session.user.image}
+                    alt={session.user.name || "User"}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xs font-semibold">
+                    {session.user.name?.[0]?.toUpperCase() || "?"}
+                  </span>
+                </div>
+              )}
             </div>
           )}
 

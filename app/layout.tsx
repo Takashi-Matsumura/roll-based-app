@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { ClientLayout } from "@/components/ClientLayout";
 import { Header } from "@/components/Header";
 import { getUserPermissions } from "@/lib/permissions";
+import { getUserAccessibleMenus } from "@/lib/access-keys";
 import { prisma } from "@/lib/prisma";
 import { getEnabledModules, menuGroups } from "@/lib/modules/registry";
 import {
@@ -42,18 +43,22 @@ export default async function RootLayout({
   let groupedModules: Record<string, AppModule[]> = {};
   let sortedMenuGroups: MenuGroup[] = [];
 
+  let accessKeyMenus: string[] = [];
+
   if (session) {
     // 1回のクエリで全情報を取得（パフォーマンス最適化）
-    const [permissions, user] = await Promise.all([
+    const [permissions, user, accessKeyMenuPaths] = await Promise.all([
       getUserPermissions(session.user.id),
       prisma.user.findUnique({
         where: { id: session.user.id },
         select: { language: true },
       }),
+      getUserAccessibleMenus(session.user.id),
     ]);
 
     userPermissions = permissions;
     language = user?.language || "en";
+    accessKeyMenus = accessKeyMenuPaths;
 
     // Module Registryから有効なモジュールを取得
     const allModules = getEnabledModules();
@@ -64,6 +69,19 @@ export default async function RootLayout({
       session.user.role,
       userPermissions,
     );
+
+    // Access Keyで許可されたメニューを追加
+    const accessKeyModules = allModules.filter((module) =>
+      accessKeyMenus.includes(module.path)
+    );
+
+    // 重複を除いてマージ
+    const modulePathSet = new Set(accessibleModules.map(m => m.path));
+    for (const module of accessKeyModules) {
+      if (!modulePathSet.has(module.path)) {
+        accessibleModules.push(module);
+      }
+    }
 
     // メニューグループごとにモジュールをグループ化
     groupedModules = groupModulesByMenuGroup(accessibleModules);

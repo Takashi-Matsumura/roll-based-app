@@ -25,9 +25,11 @@ export async function POST(request: Request) {
     const foundAccessKey = await prisma.accessKey.findUnique({
       where: { key: accessKey },
       include: {
-        permissions: {
-          include: {
-            permission: true,
+        targetUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
       },
@@ -37,6 +39,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Invalid Access key" },
         { status: 404 },
+      );
+    }
+
+    // IMPORTANT: Check if this Access key is for the current user
+    if (foundAccessKey.targetUserId && foundAccessKey.targetUserId !== session.user.id) {
+      return NextResponse.json(
+        { error: "This Access key is not issued for you" },
+        { status: 403 },
       );
     }
 

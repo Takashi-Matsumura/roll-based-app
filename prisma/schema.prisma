@@ -55,6 +55,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   userAccessKeys UserAccessKey[]
+  targetedAccessKeys AccessKey[] // このユーザー専用に発行されたAccess Key
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -84,6 +85,9 @@ model AccessKey {
   id              String                @id @default(cuid())
   key             String                @unique // アクセスキー本体（ランダム生成）
   name            String                // キーの名前/説明
+  targetUserId    String?               // 対象ユーザーID（このユーザー専用のKey）
+  targetUser      User?                 @relation(fields: [targetUserId], references: [id], onDelete: Cascade)
+  menuPaths       String                // 許可するメニューパスのJSON配列文字列
   expiresAt       DateTime              // 有効期限
   isActive        Boolean               @default(true) // 有効/無効
   createdBy       String                // 作成者（AdminのユーザーID）

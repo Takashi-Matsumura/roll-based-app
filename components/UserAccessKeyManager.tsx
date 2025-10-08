@@ -227,21 +227,6 @@ export function UserAccessKeyManager({
         )}
       </div>
 
-      {/* Demo Keys Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-900 mb-2">Demo Access Keys</h3>
-        <p className="text-sm text-blue-800 mb-2">
-          You can test with the following demo Access keys:
-        </p>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li className="font-mono">
-            • DEMO-KEY-REPORTS-2025 (Reports access only)
-          </li>
-          <li className="font-mono">
-            • DEMO-KEY-FULL-ACCESS-2025 (All permissions)
-          </li>
-        </ul>
-      </div>
     </div>
   );
 }

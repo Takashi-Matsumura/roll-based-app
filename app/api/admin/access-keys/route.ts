@@ -28,17 +28,30 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, expiresInDays, permissionIds } = body;
+    const { name, expiresInDays, targetUserId, menuPaths } = body;
 
     if (
       !name ||
       !expiresInDays ||
-      !permissionIds ||
-      permissionIds.length === 0
+      !targetUserId ||
+      !menuPaths ||
+      menuPaths.length === 0
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 },
+      );
+    }
+
+    // Verify target user exists
+    const targetUser = await prisma.user.findUnique({
+      where: { id: targetUserId },
+    });
+
+    if (!targetUser) {
+      return NextResponse.json(
+        { error: "Target user not found" },
+        { status: 404 },
       );
     }
 
@@ -51,21 +64,18 @@ export async function POST(request: Request) {
       data: {
         key,
         name,
+        targetUserId,
+        menuPaths: JSON.stringify(menuPaths), // Store as JSON string
         expiresAt,
         isActive: true,
         createdBy: session.user.id,
-        permissions: {
-          create: permissionIds.map((permissionId: string) => ({
-            permission: {
-              connect: { id: permissionId },
-            },
-          })),
-        },
       },
       include: {
-        permissions: {
-          include: {
-            permission: true,
+        targetUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
       },

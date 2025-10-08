@@ -191,7 +191,7 @@ export const moduleRegistry: Record<string, AppModule> = {
     nameJa: "出張申請",
     path: "/backoffice/business-trip",
     menuGroup: "backoffice",
-    requiredRoles: ["BACKOFFICE", "ADMIN"],
+    requiredRoles: ["USER", "MANAGER", "ADMIN"],
     order: 1,
     enabled: true,
     icon: (
@@ -219,7 +219,7 @@ export const moduleRegistry: Record<string, AppModule> = {
     nameJa: "経費精算",
     path: "/backoffice/expense-claim",
     menuGroup: "backoffice",
-    requiredRoles: ["BACKOFFICE", "ADMIN"],
+    requiredRoles: ["USER", "MANAGER", "ADMIN"],
     order: 2,
     enabled: true,
     icon: (

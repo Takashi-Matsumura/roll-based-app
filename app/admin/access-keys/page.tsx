@@ -4,6 +4,7 @@ import { AccessKeyManager } from "@/components/AccessKeyManager";
 import { prisma } from "@/lib/prisma";
 import { getLanguage } from "@/lib/i18n/get-language";
 import { adminAccessKeysTranslations } from "./translations";
+import { getEnabledModules } from "@/lib/modules/registry";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,12 +26,14 @@ export default async function AccessKeysPage() {
   const language = await getLanguage();
   const t = adminAccessKeysTranslations[language];
 
-  // Fetch all Access keys with their permissions
+  // Fetch all Access keys with target user info
   const accessKeys = await prisma.accessKey.findMany({
     include: {
-      permissions: {
-        include: {
-          permission: true,
+      targetUser: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
         },
       },
       _count: {
@@ -44,12 +47,27 @@ export default async function AccessKeysPage() {
     },
   });
 
-  // Fetch all available permissions
-  const permissions = await prisma.permission.findMany({
+  // Fetch all users (excluding current admin for selection)
+  const users = await prisma.user.findMany({
+    where: {
+      id: {
+        not: session.user.id, // Exclude self
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
     orderBy: {
-      displayName: "asc",
+      name: "asc",
     },
   });
+
+  // Get all available modules except ADMIN menu group
+  const allModules = getEnabledModules();
+  const modules = allModules.filter((module) => module.menuGroup !== "ADMIN");
 
   return (
     <div className="space-y-6">
@@ -59,8 +77,10 @@ export default async function AccessKeysPage() {
 
       <AccessKeyManager
         accessKeys={accessKeys}
-        permissions={permissions}
+        users={users}
+        modules={modules}
         adminId={session.user.id}
+        language={language}
       />
     </div>
   );
