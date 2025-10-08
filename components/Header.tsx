@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarToggle";
 import { SignInButton } from "./SignInButton";
+import { getPageTitle } from "@/lib/i18n/page-titles";
 
 interface HeaderProps {
   session?: {
@@ -11,31 +12,13 @@ interface HeaderProps {
       role: string;
     };
   } | null;
+  language?: string;
 }
 
-const PAGE_TITLES: Record<string, string> = {
-  "/": "Home",
-  "/login": "Login",
-  "/dashboard": "Dashboard",
-  "/profile": "Profile",
-  "/settings": "Settings",
-  "/access-keys": "Access Keys",
-  "/reports": "Reports",
-  "/analytics": "Analytics",
-  "/advanced-settings": "Advanced Settings",
-  "/manager/bi": "Business Intelligence",
-  "/manager/hr-evaluation": "HR Evaluation",
-  "/backoffice/business-trip": "Business Trip Request",
-  "/backoffice/expense-claim": "Expense Claim",
-  "/admin": "Admin Panel",
-  "/admin/users": "User Management",
-  "/admin/access-keys": "Access Key Management",
-};
-
-export function Header({ session }: HeaderProps) {
+export function Header({ session, language = "en" }: HeaderProps) {
   const pathname = usePathname();
   const { isOpen, width } = useSidebar();
-  const pageTitle = PAGE_TITLES[pathname] || "RBAC Demo";
+  const pageTitle = getPageTitle(pathname, language as "en" | "ja");
 
   return (
     <header

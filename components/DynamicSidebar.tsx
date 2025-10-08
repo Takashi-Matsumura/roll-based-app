@@ -236,7 +236,7 @@ export function DynamicSidebar({
         )}
 
         {/* Sign Out Button */}
-        <SignOutButton collapsed={!isOpen} />
+        <SignOutButton collapsed={!isOpen} language={language} />
       </div>
     </aside>
   );

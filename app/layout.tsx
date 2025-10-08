@@ -88,7 +88,7 @@ export default async function RootLayout({
           groupedModules={groupedModules}
           menuGroups={sortedMenuGroups}
         >
-          <Header session={session} />
+          <Header session={session} language={language} />
           <main
             className={`container mx-auto px-4 py-8 ${session ? "pt-24" : "pt-20"}`}
           >
