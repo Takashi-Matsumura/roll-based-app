@@ -39,7 +39,7 @@ export function Header({ session }: HeaderProps) {
 
   return (
     <header
-      className="bg-white shadow-sm border-b fixed top-0 right-0 z-10 transition-all duration-300"
+      className="bg-gray-800 shadow-lg border-b border-gray-700 fixed top-0 right-0 z-10 transition-all duration-300"
       style={{
         left: session ? (isOpen ? `${width}px` : "4rem") : "0",
       }}
@@ -47,9 +47,9 @@ export function Header({ session }: HeaderProps) {
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           {session ? (
-            <h1 className="text-xl font-bold text-gray-800">{pageTitle}</h1>
+            <h1 className="text-xl font-bold text-white">{pageTitle}</h1>
           ) : (
-            <Link href="/" className="text-xl font-bold text-gray-800">
+            <Link href="/" className="text-xl font-bold text-white">
               RBAC Demo
             </Link>
           )}
