@@ -16,10 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ExpenseClaimPage() {
   const session = await auth();
 
-  if (
-    !session ||
-    (session.user.role !== "BACKOFFICE" && session.user.role !== "ADMIN")
-  ) {
+  if (!session) {
     redirect("/dashboard");
   }
 

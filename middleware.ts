@@ -35,9 +35,13 @@ export default auth((req) => {
     }
   }
 
-  // Back Office routes
+  // Back Office routes - accessible by USER, MANAGER, and ADMIN
   if (pathname.startsWith("/backoffice")) {
-    if (session.user.role !== "BACKOFFICE" && session.user.role !== "ADMIN") {
+    if (
+      session.user.role !== "USER" &&
+      session.user.role !== "MANAGER" &&
+      session.user.role !== "ADMIN"
+    ) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   }
