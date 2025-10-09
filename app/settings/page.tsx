@@ -36,37 +36,6 @@ export default async function SettingsPage() {
             translations={t.language}
           />
 
-          {/* Account Settings */}
-          <div className="border-b pb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              {t.accountSettings}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t.displayName}
-                </label>
-                <input
-                  type="text"
-                  value={session.user.name || ""}
-                  disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t.emailAddress}
-                </label>
-                <input
-                  type="email"
-                  value={session.user.email || ""}
-                  disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Preferences */}
           <div className="border-b pb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
